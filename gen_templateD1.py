@@ -6,12 +6,8 @@ if (len(sys.argv) != 2):
   print ('usage: '+sys.argv[0]+' YYMM(1601)')
 yrmn=sys.argv[1]
 
-path={'114-32-164-198.HINET-IP.hinet.net':'/opt/anaconda3/bin/', 'node03':'/usr/bin/','master':'/cluster/netcdf/bin/', \
-      'DEVP':'/usr/bin/','centos8':'/opt/anaconda3/envs/py37/bin/'}
-hname=subprocess.check_output('echo $HOSTNAME',shell=True).decode('utf8').strip('\n')
-if hname not in path:
-  sys.exit('wrong HOSTNAME')
-
+ncks=subprocess.check_output('which ncks',shell=True).decode('utf8').strip('\n')
+ncatted=subprocess.check_output('which ncatted',shell=True).decode('utf8').strip('\n')
 
 fname='moz_41_20'+yrmn+'.nc'
 
@@ -29,6 +25,6 @@ for j in range(nt):
   nc.SDATE=tflag[j,0]
   nc.STIME=tflag[j,1]
   nc.close()
-  os.system(path[hname]+'/ncatted -O -a TSTEP,global,o,i,60000 '+fnamej)
+  os.system(ncatted+' -O -a TSTEP,global,o,i,60000 '+fnamej)
   a=fnamej+'.tmp'
-  os.system(path[hname]+'/ncks -O --mk_rec_dmn TSTEP '+fnamej+' '+a+';mv -f '+a+' '+fnamej)
+  os.system(ncks+' -O --mk_rec_dmn TSTEP '+fnamej+' '+a+';mv -f '+a+' '+fnamej)
