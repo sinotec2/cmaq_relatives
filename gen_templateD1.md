@@ -11,7 +11,7 @@
 1. 全球模式模擬結果(經[垂直內插](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/moz2cmaqV/))
  - 檔名規則：`'moz_41_20'+yrmn+'.nc'`
  - 只讀取時間標籤
-2 . D1範圍`CMAQ`濃度檔模版：`ICON_tmp.d1`，規格如下：
+2. D1範圍`CMAQ`濃度檔模版：`ICON_tmp.d1`，規格如下：
 
 ```bash
 kuang@node03 /nas1/cmaqruns/2016base/data/bcon
