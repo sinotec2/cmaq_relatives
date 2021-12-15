@@ -34,7 +34,7 @@ with open('lay2VGLEVLS.json','r') as f:
 lay2VGLEVLS.update({'40':40})
 
 #read the template(s)
-fname='ICON_d1_20'+yrjulhh+'.nc'
+fname='ICON_20'+yrjulhh+'.d1'
 nc = netCDF4.Dataset(fname,'r')
 v4=list(filter(lambda x:nc.variables[x].ndim==4, [i for i in nc.variables]))
 nt,nlay,nrow,ncol=(nc.variables[v4[0]].shape[i] for i in range(4))
@@ -44,8 +44,6 @@ lon, lat= pnyc(X,Y, inverse=True)
 lon_ss=np.searchsorted(lonM,lon)
 lat_ss=np.searchsorted(latM,lat)
 tflag=nc.variables['TFLAG'][:,0,:]
-zi=np.zeros(shape=(nlay,nrow,ncol))
-
 nc.close()
 
 #drop keys which values not in new CMAQ spec_list
@@ -59,32 +57,27 @@ for i in mc:
 
 #save the matrix
 v4M=list(mz2cm)
-A5=np.zeros(shape=(len(v4M),ntM,nlayM,nrowM,ncolM))
+A5=np.zeros(shape=(len(v4M),nlayM,nrowM,ncolM))
 for ix in range(len(v4M)):
   for k in range(nlayM):
-    A5[ix,:,k,:,:]=ncM.variables[v4M[ix]][:,lay2VGLEVLS[str(k)],:,:]*1000.*1000. #Volume Mixing Ratio to PPM
+    A5[ix,k,:,:]=ncM.variables[v4M[ix]][tM,lay2VGLEVLS[str(k)],:,:]*1000.*1000. #Volume Mixing Ratio to PPM
 ncM.close()
 
 #perform the horizontal interpolation and write results
-for t in range(nt):
-  td=tflag[t,0]*100+int(tflag[t,1]/10000)
-#  if td<201636400:continue
-#  if td!=201600418:continue
-  fnamet='ICON_'+str(tflag[t,0])+'{:02d}'.format(int(tflag[t,1]/10000))+'.d1'
-  print (fnamet)
-  nc = netCDF4.Dataset(fnamet,'r+')
-  for x in v4M:
-    nc.variables[mz2cm[x]][0,:,:,:]=zi[:,:,:]
-  
-  for jcrs in range(nrow):
-    jmz=lat_ss[jcrs]
-    for icrs in range(ncol):
-      imz=lon_ss[icrs]
-      rx=(lon[icrs]-lonM[imz-1])/(lonM[imz]-lonM[imz-1])
-      ry=(lat[jcrs]-latM[jmz-1])/(latM[jmz]-latM[jmz-1])
-      A2x=A5[:,t,:,jmz,imz]*rx+A5[:,t,:,jmz,imz-1]*(1-rx)
-      A2y=A5[:,t,:,jmz,imz]*ry+A5[:,t,:,jmz-1,imz]*(1-ry)
-      A2=(A2x+A2y)/2.
-      for x in v4M:
-        nc.variables[mz2cm[x]][0,:,jcrs,icrs]+=A2[v4M.index(x),:-1]*mz2cmNum[x]
-  nc.close()
+fname='ICON_20'+yrjulhh+'.d1'
+nc = netCDF4.Dataset(fname,'r+')
+for x in v4M:
+  nc.variables[mz2cm[x]][0,:,:,:]=0
+
+for jcrs in range(nrow):
+  jmz=lat_ss[jcrs]
+  for icrs in range(ncol):
+    imz=lon_ss[icrs]
+    rx=(lon[icrs]-lonM[imz-1])/(lonM[imz]-lonM[imz-1])
+    ry=(lat[jcrs]-latM[jmz-1])/(latM[jmz]-latM[jmz-1])
+    A2x=A5[:,:,jmz,imz]*rx+A5[:,:,jmz,imz-1]*(1-rx)
+    A2y=A5[:,:,jmz,imz]*ry+A5[:,:,jmz-1,imz]*(1-ry)
+    A2=(A2x+A2y)/2.
+    for x in v4M:
+      nc.variables[mz2cm[x]][0,:,jcrs,icrs]+=A2[v4M.index(x),:-1]*mz2cmNum[x]
+nc.close()
