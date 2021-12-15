@@ -8,10 +8,10 @@
 #### 引數
 - 年月(4碼)
 #### 輸入檔
-1. 全球模式模擬結果(經垂直內插)
+1. 全球模式模擬結果(經[垂直內插](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/moz2cmaqV/))
  - 檔名規則：`'moz_41_20'+yrmn+'.nc'`
  - 只讀取時間標籤
-2. D1範圍`CMAQ`濃度檔模版：`ICON_tmp.d1`，規格如下：
+2 . D1範圍`CMAQ`濃度檔模版：`ICON_tmp.d1`，規格如下：
 
 ```bash
 kuang@node03 /nas1/cmaqruns/2016base/data/bcon
@@ -85,3 +85,4 @@ for j in range(nt):
 
 ### Reference
 - sinotec2, **NCKS 在空品模式中的應用**, [FAQ](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/ncks/), Dec 10 2021
+- sinotec2, **MOZARD/WACCM模式輸出轉成CMAQ初始條件_垂直對照**, [FAQ](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/moz2cmaqV/), Dec 15 2021
