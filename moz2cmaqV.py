@@ -1,12 +1,10 @@
 import numpy as np
 import netCDF4
-import PseudoNetCDF as pnc
-import os,twd97,sys
-import datetime
-from pyproj import Proj
-if (len(sys.argv) != 2):
+import os, sys
+
+if (len(sys.argv) != 3):
   print ('usage: '+sys.argv[0]+' YYMM(1601) + metCRO3D_file')
-  #eg. moz2cmaqV.py 1804 /nas1/cmaqruns/2018base/data/mcip/METCRO3D_1804_run6.nc
+  #eg. $ python moz2cmaqV.py 1804 /nas1/cmaqruns/2018base/data/mcip/1804_run6/sChina_81ki/METCRO3D_1804_run6.nc
 yrmn=sys.argv[1]
 CRS=sys.argv[2] #only vertical levels are used
 nc = netCDF4.Dataset(CRS,'r')
