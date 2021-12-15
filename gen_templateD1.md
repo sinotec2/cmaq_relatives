@@ -58,5 +58,8 @@ for j in range(nt):
   os.system(ncks+' -O --mk_rec_dmn TSTEP '+fnamej+' '+a+';mv -f '+a+' '+fnamej)
 ```
 
+## 程式下載
+- [github](https://github.com/sinotec2/cmaq_relatives/blob/master/gen_templateD1.py)
+
 ### Reference
 - sinotec2, **NCKS 在空品模式中的應用**, [FAQ](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/ncks/), Dec 10 2021
