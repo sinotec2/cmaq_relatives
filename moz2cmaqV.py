@@ -5,16 +5,16 @@ import os,twd97,sys
 import datetime
 from pyproj import Proj
 if (len(sys.argv) != 2):
-  print ('usage: '+sys.argv[0]+' YYMM(1601)')
+  print ('usage: '+sys.argv[0]+' YYMM(1601) + metCRO3D_file')
 yrmn=sys.argv[1]
-CRS="../mcip/sChina_27k/METCRO3D_1601.nc"
+CRS=sys.argv[2] #only vertical levels are used
 nc = netCDF4.Dataset(CRS,'r')
 lvs_crs0= nc.VGLVLS[:]
 lvs_crs=((1013-50)*lvs_crs0+50)*-1
 nlays=nc.NLAYS
 
 #store the mozart model results
-fname='moz_41_201601.nc'
+fname='moz_41_20'+yrmn+'.nc' #may be other source
 nc = netCDF4.Dataset(fname,'r')
 v4=list(filter(lambda x:nc.variables[x].ndim==4, [i for i in nc.variables]))
 lvs= nc.VGLVLS[:]*-1
@@ -24,7 +24,7 @@ A5=np.zeros(shape=(nc.NVARS,nt,nlay,nrow,ncol))
 for ix in range(nc.NVARS):
   A5[ix,:,:,:,:]=nc.variables[v4[ix]][:,:,:,:]
 
-fname='moz_41_201601.nc'
+fname='moz_41_20'+yrmn+'.nc'
 nc = netCDF4.Dataset(fname,'r+')
 nc.VGLVLS=lvs_crs0
 for kcrs in range(nlays):
