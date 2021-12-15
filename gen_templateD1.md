@@ -11,7 +11,27 @@
 1. 全球模式模擬結果(經垂直內插)
  - 檔名規則：`'moz_41_20'+yrmn+'.nc'`
  - 只讀取時間標籤
-2. D1範圍`CMAQ`濃度檔模版：`ICON_tmp.d1`
+1. D1範圍`CMAQ`濃度檔模版：`ICON_tmp.d1`，規格如下：
+
+```bash
+kuang@node03 /nas1/cmaqruns/2016base/data/bcon
+$ nc=ICON_tmp.d1
+(py37)
+kuang@node03 /nas1/cmaqruns/2016base/data/bcon
+$ ncdump -h $nc|H
+netcdf ICON_tmp {
+dimensions:
+        TSTEP = UNLIMITED ; // (1 currently)
+        LAY = 40 ;
+        ROW = 57 ;
+        COL = 57 ;
+        VAR = 248 ;
+        DATE-TIME = 2 ;
+variables:
+        float AACD(TSTEP, LAY, ROW, COL) ;
+```
+
+
 #### 輸出檔
 - 每個時間D1範圍`CMAQ`之濃度檔
 
