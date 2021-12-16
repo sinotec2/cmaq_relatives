@@ -21,8 +21,8 @@
 #### I/O檔案
 - `mozart`等全球模式輸出結果(經[垂直內插](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/moz2cmaqV/)處理)
 - `'ICON_20'+yrjulhh+'.d1'`模版：空白CMAQ濃度檔
-- `cb6`對照表
-- 垂直網格對照表
+- `cb6`對照表[cb6_new.json](https://github.com/sinotec2/Focus-on-Air-Quality/blob/main/GridModels/BCON/cb6_new.json)、[cb6_newNum.json](https://github.com/sinotec2/Focus-on-Air-Quality/blob/main/GridModels/BCON/cb6_newNum.json)
+- 垂直網格對照表[lay2VGLEVLS.json](https://github.com/sinotec2/Focus-on-Air-Quality/blob/main/GridModels/BCON/lay2VGLEVLS.json)
 
 #### 同步執行
 - 範例同時執行程式由2018/4/1~4/30日(Juian date=091\~120)之濃度內插
@@ -77,9 +77,9 @@ tflagM=[str(i*100+j//10000)[2:] for i,j in zip(ncM.variables['TFLAG'][:,0,0],ncM
 tM=tflagM.index(yrjulhh)
 ```
 - 讀取對照表
-  - cb6的物質種類對照表：`cb6_new.json`
-  - 碳鍵數對照表：`cb6_newNum.json`
-  - 垂直高度對照表：`lay2VGLEVLS.json`
+  - cb6的物質種類對照表：[cb6_new.json](https://github.com/sinotec2/Focus-on-Air-Quality/blob/main/GridModels/BCON/cb6_new.json)
+  - 碳鍵數對照表：[cb6_newNum.json](https://github.com/sinotec2/Focus-on-Air-Quality/blob/main/GridModels/BCON/cb6_newNum.json)
+  - 垂直高度對照表：[lay2VGLEVLS.json](https://github.com/sinotec2/Focus-on-Air-Quality/blob/main/GridModels/BCON/lay2VGLEVLS.json)
 
 ```python
 #load mz2cmaq map
