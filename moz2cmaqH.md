@@ -2,7 +2,14 @@
 
 ## 背景
 - 全球模式模擬結果要使用在地區的空品模擬，需要經過空間、時間的內插、以及空品項目的對照等作業。此處進行水平內插與污染物的對照。
-- 前置作業包括[數據下載](https://sinotec2.github.io/Focus-on-Air-Quality/AQana/GAQuality)、轉換成m3格式、[垂直層數切割](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/moz2cmaqV/)、以及空白濃度[模版檔案之準備]()等。
+- 前置作業包括
+  - [數據下載](https://sinotec2.github.io/Focus-on-Air-Quality/AQana/GAQuality)、
+  - 轉換成m3格式、[垂直層數切割](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/moz2cmaqV/)、以及
+  - 逐6小時空白濃度[模版檔案之準備]()等。
+- 由於CMAQ濃度檔案可以使用[combine]()予以整併，就可以用[VERDI](https://github.com/CEMPD/VERDI/blob/master/doc/User_Manual/VERDI_ch01.md)或進行檢視。
+- 後續作業
+  - 邊界濃度的製作，包括時間的內插、邊界框濃度的解析等，將在[bcon]()程式內進行。
+  - 直接以初始濃度引用：在`run_cctm.csh`內指定即可
 
 ## 程式說明
 
@@ -160,4 +167,5 @@ nc.close()
 - [github](https://github.com/sinotec2/cmaq_relatives/blob/master/moz2cmaqHd1J.py)
 
 ## Reference
+- lizadams, **Visualization Environment for Rich Data Interpretation (VERDI): User’s Manual**, [github](https://github.com/CEMPD/VERDI/blob/master/doc/User_Manual/VERDI_ch01.md), August 03, 2021
 - sinotec2, **NC矩陣遮罩之檢查與修改**, [FAQ](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/masked/),Dec 10 2021
