@@ -1,7 +1,7 @@
 
 #isam job for 20180404~8, 6 AirQualityForecastZone(AQFS), only GR1~4 and PTA are taken into account
 #sum up aerosol results using python program, to be PM10, see SA_PM10.py
-in $(ls CCTM*nc);do python ../SA_PM10.py $nc;done >& /dev/null
+for nc in $(ls CCTM*nc);do python ../SA_PM10.py $nc;done >& /dev/null
 for z in FWS JJZ NEC NWC SCH YZD;do 
   for d in {4..8};do
     #only GR13、GR24、PTA results(_[GP]*) are summed, see addNC, the python program
