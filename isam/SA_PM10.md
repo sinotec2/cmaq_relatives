@@ -3,10 +3,10 @@
 
 ## 背景
 - 目前似乎還找不到類似`combine`的後處理程式，可以解析**CMAQ-ISAM**執行的成果。如果是單一污染物(如臭氧`O3`)還好，可以直接讀取`nc`檔案，如果是綜合性污染物(`PM10`)，那就困難了。
-  - `CCTM_SA_ACONC`變數的命名方式：`spec_group`
+  - CMAQ-ISAM執行的成果`CCTM_SA_ACONC`變數的命名方式：`spec_group`
     - `spec`=`CCTM_ACONC`的[污染項目名稱](https://github.com/USEPA/CMAQ/blob/main/CCTM/src/MECHS/mechanism_information/cb6mp_ae6_aq/AE6_species_table.md)
     - `group`=`isam_control.txt`檔案裏定義的`TAG_NAME`，另外還包括`ICON`、`BCON`、`OTHR`等固定內設的標籤。
-- 綜合性污染物的定義，可以參考`$REPO_HOME/POST/combine/scripts/spec_def_files/SpecDef_${MECH}.txt`的內容
+- 綜合性污染物的定義：可以參考`$REPO_HOME/POST/combine/scripts/spec_def_files/SpecDef_${MECH}.txt`的內容
 - **ISAM**可能同時執行多個**分區**之排放分析，因此程式輸出結果須能有所區別
   - 分區的定義在`isam_control.txt`檔案裏的`REGION(S)`，指定到`$ISAM_REGIONS`檔案的分區名稱內容
   - 此處以中國大陸的[空氣質量預報](http://big5.mee.gov.cn/gate/big5/www.mee.gov.cn/hjzl/dqhj/kqzlyb/)分區為例
@@ -36,10 +36,10 @@ foreach BSN ('JJZ' 'SCH' 'YZD' 'FWS' 'NEC' 'NWC')
 end
 ```
 #### 執行腳本
-- [run_isamMM_RR_DM.csh2]()
+- [run_isamMM_RR_DM.csh2](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/run_isamMM_RR_DM.csh2)
 
 ### 程式名稱
-- [SA_PM10.py]()
+- [SA_PM10.py](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/SA_PM10.py)
 
 ### 執行方式
 
@@ -52,7 +52,37 @@ end
 - PM10模版檔案：`template_PM10.nc`
   - 單一污染物、單一時間、地面層
 - 輸出結果檔案：`'PM10'+path+'_'+ymdh+'_'+g+'.nc'`
-  `path`=**ISAM**分區
+  - `path`：**ISAM**分區(詳前表**ISAM**結果檔名標籤及執行批次)
+  - `ymdh`：年月日時
+  - `g`：排放類別標籤(`TAG_NAME`)
+
+#### 執行腳本([proc.cs](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/proc.cs))
+
+- 將**ISAM**結果與模版連結到同一目錄
+- 每個結果檔案都執行一遍`SA_PM10.py`，
+  - 會拆分成逐日、每個排放標籤、每個**分區**之分析濃度
+  - 再逐層加總或合併
+- 加總使用到python程式[addNC](https://github.com/sinotec2/Focus-on-Air-Quality/blob/main/utilities/netCDF/addNC.md)
+  - 欲加總的內容項目太多了，以`ncs`變數累加之
+  - 加總結果檔名：`PM10${z}_2018040${d}.nc`  
+- 合併(照日期附加)
+  - 使用[ncrcat]()程式
+  - 可以用[VERDI]檢視之
+
+```bash
+#isam job for 20180404~8, 6 AirQualityForecastZone(AQFS), only GR1~4 and PTA are taken into account
+#sum up aerosol results using python program, to be PM10, see SA_PM10.py
+in $(ls CCTM*nc);do python ../SA_PM10.py $nc;done >& /dev/null
+for z in FWS JJZ NEC NWC SCH YZD;do 
+  for d in {4..8};do
+    #only GR13、GR24、PTA results(_[GP]*) are summed, see addNC, the python program
+    ncs='';for nc in $(ls PM10${z}_2018040${d}_[GP]*.nc);do ncs=${ncs}" "$nc;done;
+    python ~/bin/addNC $ncs PM10${z}_2018040${d}.nc
+  done
+done
+# combine all days for each zone
+for z in FWS JJZ NEC NWC SCH YZD;do ncrcat -O PM10${z}_2018040?.nc PM10${z}.nc;done
+```
 
 
 ### 程式分段說明
@@ -124,5 +154,9 @@ for g in grp:
   nco.close()
 ```
 
+## 程式下載
+- 主程式[SA_PM10.py](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/SA_PM10.py)
+- 執行腳本[proc.cs](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/proc.cs)
+
 ## Reference
--中華人民共和國生態環境部, **空氣品質預報**, [生態環境部官網](http://big5.mee.gov.cn/gate/big5/www.mee.gov.cn/hjzl/dqhj/kqzlyb/)
+- 中華人民共和國生態環境部, **空氣品質預報**, [生態環境部官網](http://big5.mee.gov.cn/gate/big5/www.mee.gov.cn/hjzl/dqhj/kqzlyb/)
