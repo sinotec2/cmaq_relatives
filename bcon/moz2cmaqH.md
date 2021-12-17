@@ -77,8 +77,9 @@ tflagM=[str(i*100+j//10000)[2:] for i,j in zip(ncM.variables['TFLAG'][:,0,0],ncM
 tM=tflagM.index(yrjulhh)
 ```
 - 讀取對照表
-  - `cb6`對照表[cb6_new.json](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/cb6_new.json)、[cb6_newNum.json](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/cb6_newNum.json)
-  - 垂直網格對照表[lay2VGLEVLS.json](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/lay2VGLEVLS.json)
+  - `cb6`的物質種類對照表：[cb6_new.json](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/cb6_new.json)、
+  - 碳鍵數對照表：[cb6_newNum.json](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/cb6_newNum.json)
+  - 垂直網格對照表：[lay2VGLEVLS.json](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/lay2VGLEVLS.json)
 
 ```python
 #load mz2cmaq map
