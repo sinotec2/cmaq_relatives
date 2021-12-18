@@ -5,15 +5,16 @@
 - 前置作業包括
   - [數據下載](https://sinotec2.github.io/Focus-on-Air-Quality/AQana/GAQuality)、
   - 轉換成m3格式、[垂直層數切割](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/moz2cmaqV/)、以及
-  - 逐6小時空白濃度[模版檔案之準備]()等。
-- 由於CMAQ濃度檔案可以使用[combine]()予以整併，就可以用[VERDI](https://github.com/CEMPD/VERDI/blob/master/doc/User_Manual/VERDI_ch01.md)或進行檢視。
+  - 逐6小時空白濃度[模版檔案之準備](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/gen_templateD1/)等。
+- 由於CMAQ濃度檔案可以使用[combine]()予以整併，(或直接)就可以用[VERDI](https://github.com/CEMPD/VERDI/blob/master/doc/User_Manual/VERDI_ch01.md)或進行檢視。
 - 後續作業
-  - 邊界濃度的製作，包括時間的內插、邊界框濃度的解析等，將在[bcon]()程式內進行。
+  - 邊界濃度的製作，包括時間的內插、邊界框濃度的解析等，將在[bcon](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/run_bconMM_RR_DM/)程式內進行。
   - 直接以初始濃度引用：在`run_cctm.csh`內指定即可
 
-## 程式說明
+## [程式](https://github.com/sinotec2/cmaq_relatives/blob/master/moz2cmaqHd1J.py)說明
 
 ### 執行方式
+- (eg.)執行2018年4月1日0時之內插：`python moz2cmaqHd1J.py 1809100`
 
 #### 引數
 - `年代`+`Julian date`+`小時`共7碼
@@ -37,7 +38,7 @@ for j in {091..120};do
 done
 ```
 
-### 程式分段說明
+### [程式](https://github.com/sinotec2/cmaq_relatives/blob/master/moz2cmaqHd1J.py)分段說明
 - 調用模組
 
 ```python
