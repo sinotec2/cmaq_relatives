@@ -4,7 +4,7 @@
 
 ## 腳本程式說明
 ### 程式名稱
-- [run_bconMM_RR_DM.csh]()
+- [run_bconMM_RR_DM.csh](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/run_bconMM_RR_DM.csh)
 - 修改自[USEAP_CMAQ](https://github.com/USEPA/CMAQ)之[run_bcon.csh](https://github.com/USEPA/CMAQ/blob/main/PREP/bcon/scripts/run_bcon.csh)
 
 ### 分段說明
@@ -194,7 +194,7 @@ $ cat -n run_bconMM_RR_DM.csh
    130	    setenv MET_CRO_3D_CRS $CMAQ_DATA/mcip/$APPL/${GRID_NAM0}/METCRO3D_$APPL.nc
    131	    if ( $DM == 'd01' ) then
 ```
-- `d01`情況：直接使用全球模式模擬結果(見[moz2cmaqH]())
+- `d01`情況：直接使用全球模式模擬結果(見[moz2cmaqH](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/moz2cmaqH/))
 
 ```python
    132	      setenv CTM_CONC_1 $CMAQ_DATA/bcon/ICON_d1_20${APYM}_run${RUN}.nc
@@ -279,6 +279,6 @@ $ cat -n run_bconMM_RR_DM.csh
 ```
 
 ## 腳本檔案下載
-- [github]()
+- [github](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/run_bconMM_RR_DM.csh)
 
 ## 參考
