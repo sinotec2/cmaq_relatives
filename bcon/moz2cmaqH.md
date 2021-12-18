@@ -6,7 +6,7 @@
   - [數據下載](https://sinotec2.github.io/Focus-on-Air-Quality/AQana/GAQuality)、
   - 轉換成m3格式、[垂直層數切割](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/moz2cmaqV/)、以及
   - 逐6小時空白濃度[模版檔案之準備](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/gen_templateD1/)等。
-- 由於CMAQ濃度檔案可以使用[combine]()予以整併，(或直接)就可以用[VERDI](https://github.com/CEMPD/VERDI/blob/master/doc/User_Manual/VERDI_ch01.md)或進行檢視。
+- 由於CMAQ濃度檔案可以使用[combine](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/run_combMM_R_DM/)予以整併，(或直接)就可以用[VERDI](https://github.com/CEMPD/VERDI/blob/master/doc/User_Manual/VERDI_ch01.md)或進行檢視。
 - 後續作業
   - 邊界濃度的製作，包括時間的內插、邊界框濃度的解析等，將在[bcon](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/BCON/run_bconMM_RR_DM/)程式內進行。
   - 直接以初始濃度引用：在`run_cctm.csh`內指定即可
@@ -35,6 +35,50 @@ for j in {091..120};do
   for h in 00 06 12 18;do 
     sub python moz2cmaqHd1J.py 18$j$h
   done
+done
+```
+#### 執行成果的整合(ncrcat)
+- 逐6小時的結果，需要整合成批次時間範圍內的**濃度檔序列**，此處使用`ncrcat`程式
+- **濃度檔序列**可以連結到一新的目錄，然後用`ncrcat`將其整合，或使用迴圈累加檔名字串，在將字串內的檔案整合。範例如下：
+  - 將**全月**檔案連結到目錄、再以`ncrcat`整合
+
+```bash
+for i in {12..12};do
+  cdate=2019${i}
+  pdate=`date -d "${cdate}01 -1  days" +%Y%j`
+  ndate=`date -d "${cdate}01 +1 month" +%Y%j`
+  mkdir -p $cdate
+  cd $cdate
+  for ((d=$pdate;d<=$ndate;d+=1));do
+    for h in 00 06 12 18;do
+      ff=../ICON_${d}${h}.d1
+      if ! [ -e $ff ];then continue;fi
+      ln -sf $ff .
+    done
+  done
+  cd ..
+  ncrcat -O ${cdate}/* ICON_d1_${cdate}.nc &
+done
+```
+  - 按照執行批次的日期範圍，進行字串累加， 再以`ncrcat`整合
+
+```bash
+for mo in {01..12};do
+begd=$(date -ud "2019${mo}15 - 1 month" +%Y%m%d)
+for r in {5..12};do
+    d0=$(( ($r-1)*4 ))
+    d=d0
+    II=ICON_
+  for ((d=d0;d<=$(( $d0+5));d+=1));do
+    j=$(date -ud "$begd + $d days" +%Y%j)
+    if [ $d == $d0 ]; then
+      files=$II${j}*.d1
+    else
+      files=${files}' '$II${j}*.d1
+    fi
+  done
+  sub ncrcat -O ${files} ICON_d1_${y}${mo}_run${r}.nc
+done
 done
 ```
 
