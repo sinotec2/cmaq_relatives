@@ -8,6 +8,7 @@
 - 修改自[USEAP_CMAQ](https://github.com/USEPA/CMAQ)之[run_bcon.csh](https://github.com/USEPA/CMAQ/blob/main/PREP/bcon/scripts/run_bcon.csh)
 
 ### 分段說明
+
 ```bash
 kuang@114-32-164-198 ~/GitHub/cmaq_relatives/bcon
 $ cat -n run_bconMM_RR_DM.csh
@@ -60,13 +61,13 @@ $ cat -n run_bconMM_RR_DM.csh
     38	set CAS        = 11 #teds11
     39	
 ```
-- 
+- 模式版本與應用個案(`APPL`)，設定為**年月**_run**批序**
 
 ```python
     40	 set VRSN     = v53                     #> Code Version
     41	 set APPL       = ${APYM}_run${RUN}
 ```
-- 
+- 水平網格的設定：詳[mcip]()的設定
 
 ```python
     42	#> Horizontal grid definition
@@ -92,27 +93,23 @@ $ cat -n run_bconMM_RR_DM.csh
     62	
     63	
 ```
-- 
+- 執行檔路徑與名稱
 
 ```python
     64	#> Set the build directory:
     65	 set BLD      = /opt/CMAQ_Project/PREP/bcon/scripts/BLD_BCON_${VRSN}_${compilerString}
-```
-- 
-
-```python
     66	 set EXEC     = BCON_${VRSN}.exe  
     67	 set EXEC_ID  = bcon
     68	 cat $BLD/BCON_${VRSN}.cfg; echo " "; set echo
     69	
     70	#> Horizontal grid definition 
 ```
-- 
+- 網格設定檔案
 
 ```python
     71	 setenv GRIDDESC $CMAQ_DATA/mcip/$APPL/$GRID_NAME/GRIDDESC #> grid description file 
 ```
-- 
+- `bcon`IO設定
 
 ```python
     72	 setenv IOAPI_ISPH 20                     #> GCTP spheroid, use 20 for WRF-based modeling
@@ -137,12 +134,12 @@ $ cat -n run_bconMM_RR_DM.csh
     91	# =====================================================================
     92	
 ```
-- 
+- `bcon`輸出檔案的路徑
 
 ```python
     93	 setenv OUTDIR  $CMAQ_HOME/data/bcon       #> output file directory
 ```
-- 
+- 原腳本說明段
 
 ```python
     94	
@@ -167,7 +164,8 @@ $ cat -n run_bconMM_RR_DM.csh
    113	#     BNDY_CONC_1 = gridded BC file for target domain
    114	# =====================================================================
 ```
-- 
+- 批次起始時間的計算
+  - 批次時間為**5天**+**1小時**
 
 ```python
    115	set BEGD = `date -ud "20${APPL_YR}-${MO}-15 +-1months" +%Y-%m-%d`
@@ -177,7 +175,7 @@ $ cat -n run_bconMM_RR_DM.csh
    119	set NDAYS = 6
    120	 
 ```
-- 
+- 日期的格式轉換
 
 ```python
    121	    set YYYYJJJ  = `date -ud "${DATE}" +%Y%j`   #> Convert YYYY-MM-DD to YYYYJJJ
@@ -188,16 +186,34 @@ $ cat -n run_bconMM_RR_DM.csh
    126	#   setenv STIME           000000
    127	#   setenv RUNLEN          240000
    128	
+```
+- `METCRO3D`檔案路徑之設定
+
+```python
    129	 if ( $BCON_TYPE == regrid ) then 
    130	    setenv MET_CRO_3D_CRS $CMAQ_DATA/mcip/$APPL/${GRID_NAM0}/METCRO3D_$APPL.nc
    131	    if ( $DM == 'd01' ) then
+```
+- `d01`情況：直接使用全球模式模擬結果(見[moz2cmaqH]())
+
+```python
    132	      setenv CTM_CONC_1 $CMAQ_DATA/bcon/ICON_d1_20${APYM}_run${RUN}.nc
    133	    else #if( $DM == 'd02'|| $DM == 'd04' ) then
+```
+- 其他層級的模擬範圍：使用上層`CCTM_ACONC`模擬結果
+  - 但因為`CCTM_ACONC`是逐日儲存的，需要先整合成一個檔案
+
+```python
    134	      setenv CTM_CONC_1 $CMAQ_DATA/bcon/ACONC_d2_20${APYM}.nc  
    135	#link last run/last day as previous day
    136	#     if ( ( $RUN == 5 ) ||  ( ! -e ${CTM_CONC_1} )) then
    137	        set YYYYMMDDb = `date -ud "${DATE} -1 day" +%Y%m%d`
    138	
+```
+- 會需要比正常天數多一個小時，所以天數要多一天。
+  - 可以用[pr_tflag.py]()`確認`nc`檔案的`TFLAG`內容。
+
+```python
    139	        foreach it ( `seq 0 ${NDAYS}` )
    140	          set YMD = `date -ud "${YYYYMMDDb} +$it day" +%Y%m%d`  
    141	          set out_ym = /nas1/cmaqruns/2019base/data/output_CCTM_v53_gcc_${APYM}
@@ -213,16 +229,36 @@ $ cat -n run_bconMM_RR_DM.csh
    151	          ln -sf $src $out_ym/${YMD}.tmp
    152	        end 
    153	      #if ( ! -e ${CTM_CONC_1} ) then
+```
+- 用`ncrcat`將上層濃度檔序列，整合(append along time axis)成一個大檔案
+
+```python
    154	        /usr/bin/ncrcat -O $out_ym/20??????.tmp ${CTM_CONC_1} #this will take large of time
    155	        rm $out_ym/20??????.tmp
    156	#     endif
    157	    endif
+```
+- `mcip`邊界檔案結果的檔名與路徑
+
+```python
    158	    setenv MET_BDY_3D_FIN $CMAQ_DATA/mcip/$APPL/$GRID_NAME/METBDY3D_$APPL.nc
+```
+- `profile`的設定方式(沒有用到)
+
+```python
    159	 else if ( $BCON_TYPE == profile ) then
    160	    setenv BC_PROFILE $BLD/avprofile_cb6r3m_ae7_kmtbr_hemi2016_v53beta2_m3dry_col051_row068.csv
    161	    setenv MET_BDY_3D_FIN $CMAQ_DATA/mcip/$APPL/$GRID_NAME/METBDY3D_$APPL.nc
    162	 endif
+```
+- `bcon`結果檔名的設定
+
+```python
    163	 setenv BNDY_CONC_1    "$OUTDIR/BCON_${VRSN}_${APPL}_${BCON_TYPE}_${YYYYMMDD}_${GRID_NAME} -v"
+```
+- 執行程式
+
+```python
    164	
    165	# =====================================================================
    166	#> Output File
@@ -240,7 +276,6 @@ $ cat -n run_bconMM_RR_DM.csh
    178	 time $BLD/$EXEC
    179	
    180	 exit() 
-
 ```
 
 ## 腳本檔案下載
