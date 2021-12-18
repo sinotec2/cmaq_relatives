@@ -8,8 +8,9 @@
 - 修改自[USEAP_CMAQ](https://github.com/USEPA/CMAQ)之[run_bcon.csh](https://github.com/USEPA/CMAQ/blob/main/PREP/bcon/scripts/run_bcon.csh)
 
 ### 分段說明
+- 原腳本說明段
 
-```bash
+```python
 kuang@114-32-164-198 ~/GitHub/cmaq_relatives/bcon
 $ cat -n run_bconMM_RR_DM.csh
      1	#!/bin/csh -f
@@ -34,7 +35,7 @@ $ cat -n run_bconMM_RR_DM.csh
 ```
 - 工作目錄及編譯環境
 
-```bash    
+```python    
     20	 setenv CMAQ_HOME $PWD
     21	 source /opt/CMAQ_Project/config_cmaq.csh $compiler
     22	 
@@ -211,7 +212,7 @@ $ cat -n run_bconMM_RR_DM.csh
    138	
 ```
 - 會需要比正常天數多一個小時，所以天數要多一天。
-  - 可以用[pr_tflag.py]()`確認`nc`檔案的`TFLAG`內容。
+  - 可以用[pr_tflag.py](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/pr_tflag/)`確認`nc`檔案的`TFLAG`內容。
 
 ```python
    139	        foreach it ( `seq 0 ${NDAYS}` )
