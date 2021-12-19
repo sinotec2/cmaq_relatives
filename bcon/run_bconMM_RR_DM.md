@@ -1,14 +1,41 @@
 # **CMAQ**邊界條件輸入檔案之產生
 
 ## 背景
+- `BCON`程式的執行，是由[run_bcon.csh](https://github.com/USEPA/CMAQ/blob/main/PREP/bcon/scripts/run_bcon.csh)腳本所控制，好處是所有的模式條件都會儲存在腳本文字檔案中。
+- 因目前公開的**CMAQ**版本為非同步巢狀網格版本，各範圍間邊界條件的產生必須由程式外部控制，亦即必須針對run_bcon.csh](https://github.com/USEPA/CMAQ/blob/main/PREP/bcon/scripts/run_bcon.csh)腳本進行修改，以使其應用在不同範圍邊界條件之產生。
+- 簡言之，任一範圍的邊界條件(4階維度檔案)乃由上層模式模擬結果(5階維度檔案)而來。`d01`則由全球模式結果而來，其他則由**CMAQ**模擬結果而來。
 
 ## 腳本程式說明
 ### 程式名稱
 - [run_bconMM_RR_DM.csh](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/run_bconMM_RR_DM.csh)
 - 修改自[USEAP_CMAQ](https://github.com/USEPA/CMAQ)之[run_bcon.csh](https://github.com/USEPA/CMAQ/blob/main/PREP/bcon/scripts/run_bcon.csh)
 
+### 引數
+- 有3個引數，分別是月份(MO, 01~12)、run#(5~12)、第2/4層(d02/d04)
+
+### 需要檔案
+1. 上層氣象檔案：`MET_CRO_3D_CRS`
+   * 如果是d02(27k)的邊界，就要是d01(81k)的氣象檔案，
+   * 如果是d04(3k)則需要d02(27k)氣象
+   * 各層氣象的**網格定義**、**時間範圍**必須與濃度檔案一致
+1. 上層粗網格模式模擬結果：`CTM_CONC_1`，類似前述上層氣象檔案
+   * 上層粗網格模式模擬時，「必須」使用完整的垂直範圍，「不能」指定輸出的層數，如此才能切割完整的高度範圍
+      * ```setenv ACONC_BLEV_ELEV```
+      * ```setenv APMDIAG_BLEV_ELEV```
+      * 備份時注意：「不能」將上層數據去除
+   * 如果是d02(27k)的邊界，就需要d1濃度檔，全球模式模擬結果。見另筆記說明(全球空品模擬結果作為**CMAQ**之初始及邊界條件)。
+   * 如果是d04(3k)的邊界，就需要d02濃度檔，```run_cctmMM_RR_DM.csh $MO $RUN d02```模擬結果。
+   * 由於cctm模擬結果(`CCTM_ACONC`)是每天一個檔，需要先連結成一個連續時間的大暫存檔案。
+      * 粗網格模擬結果，先在全月目錄下連結彙總 
+         * 執行`combine`之前的前置作業
+         * 同時要連結`CCTM_ACONC`(for combine and run_bcon)及`CCTM_APDIAG`(for combine not for run_bcon)
+      * 腳本會抓到`$CMAQ_HOME`根目錄，以年月日時間做為檔名，以解決ncrcat連結的時間順序問題。
+      * 須注意`NCO`的路徑。
+      * 此暫存檔案每批次不同，連續執行會覆蓋，執行完畢也請予以刪除，以減省空間。
+      
 ### 分段說明
 - 原腳本說明段
+   - 此處為`gcc`所編譯
 
 ```python
 kuang@114-32-164-198 ~/GitHub/cmaq_relatives/bcon
@@ -63,12 +90,13 @@ $ cat -n run_bconMM_RR_DM.csh
     39	
 ```
 - 模式版本與應用個案(`APPL`)，設定為**年月**_run**批序**
+   - run**批序**之定義，與[WRF](https://sinotec2.github.io/Focus-on-Air-Quality/wind_models/OBSGRID/obsYYMM_run.sh/#obsyymm_runsh%E5%88%86%E6%AE%B5%E8%AA%AA%E6%98%8E)及[mcip](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/MCIP/)相同。
 
 ```python
     40	 set VRSN     = v53                     #> Code Version
     41	 set APPL       = ${APYM}_run${RUN}
 ```
-- 水平網格的設定：詳[mcip]()的設定
+- 水平網格的設定：詳[mcip](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/MCIP/)的設定
 
 ```python
     42	#> Horizontal grid definition
@@ -94,7 +122,7 @@ $ cat -n run_bconMM_RR_DM.csh
     62	
     63	
 ```
-- 執行檔路徑與名稱
+- `BCON`執行檔路徑與名稱
 
 ```python
     64	#> Set the build directory:
@@ -105,7 +133,7 @@ $ cat -n run_bconMM_RR_DM.csh
     69	
     70	#> Horizontal grid definition 
 ```
-- 網格設定檔案
+- 網格設定檔案之路徑。此檔案為[mcip](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/MCIP/)所產生。
 
 ```python
     71	 setenv GRIDDESC $CMAQ_DATA/mcip/$APPL/$GRID_NAME/GRIDDESC #> grid description file 
@@ -166,7 +194,7 @@ $ cat -n run_bconMM_RR_DM.csh
    114	# =====================================================================
 ```
 - 批次起始時間的計算
-  - 批次時間為**5天**+**1小時**
+  - 批次時間為**5天**+**1小時**，因此需要**6天**。
 
 ```python
    115	set BEGD = `date -ud "20${APPL_YR}-${MO}-15 +-1months" +%Y-%m-%d`
@@ -202,7 +230,7 @@ $ cat -n run_bconMM_RR_DM.csh
    133	    else #if( $DM == 'd02'|| $DM == 'd04' ) then
 ```
 - 其他層級的模擬範圍：使用上層`CCTM_ACONC`模擬結果
-  - 但因為`CCTM_ACONC`是逐日儲存的，需要先整合成一個檔案
+  - 但因為`CCTM_ACONC`是逐日儲存的，需要先以`ncrcat`整合成一個檔案
 
 ```python
    134	      setenv CTM_CONC_1 $CMAQ_DATA/bcon/ACONC_d2_20${APYM}.nc  
@@ -211,7 +239,7 @@ $ cat -n run_bconMM_RR_DM.csh
    137	        set YYYYMMDDb = `date -ud "${DATE} -1 day" +%Y%m%d`
    138	
 ```
-- 會需要比正常天數多一個小時，所以天數要多一天。
+- 會需要比正常天數多一個小時，所以天數要**多一天**。
   - 可以用[pr_tflag.py](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/pr_tflag/)`確認`nc`檔案的`TFLAG`內容。
 
 ```python
@@ -279,7 +307,49 @@ $ cat -n run_bconMM_RR_DM.csh
    180	 exit() 
 ```
 
+### ***Mac***版本日期設定與計算方式之差異 
+- ***Mac*** (<)與一般的UNIX(>)有很大的[差異](https://www.cnblogs.com/qwj-sysu/p/5396372.html)，輸入格式`-f`在引數之前設定，日期的加減也是在引數之前。一般(如***centos***)是在引數之後。
+- run**批序**之起始日：前月15日
+
+```bash
+<     set BEGD = ` date -v-1m -j -f "%Y-%m-%d" "20${APYR}-${MO}-15" +%Y-%m-%d`
+---
+>     set BEGD = `date -ud "20${APPL_YR}-${MO}-15 +-1months" +%Y-%m-%d`
+```
+- `BEGD`後的`DD`日
+
+```bash
+<     set DATE = `date -v+${DD}d -j -f "%Y-%m-%d" "${BEGD}" +%Y-%m-%d`
+---
+>     set DATE  = `date -ud "$BEGD +${DD}days" +%Y-%m-%d`
+```
+- 輸出格式：這部分是相同的
+
+```bash
+<     set YYYYJJJ  = `date -j -f "%Y-%m-%d" "${DATE}" "+%Y%j"`  #> Convert YYYY-MM-DD to YYYYJJJ
+<     set YYYYMMDD = `date -j -f "%Y-%m-%d" "${DATE}" "+%Y%m%d"` #> Convert YYYY-MM-DD to YYYYMMDD
+<     set YYMMDD   = `date -j -f "%Y-%m-%d" "${DATE}" "+%y%m%d"` #> Convert YYYY-MM-DD to YYMMDD
+---
+>     set YYYYJJJ  = `date -ud "${DATE}" +%Y%j`   #> Convert YYYY-MM-DD to YYYYJJJ
+>     set YYYYMMDD = `date -ud "${DATE}" +%Y%m%d` #> Convert YYYY-MM-DD to YYYYMMDD
+>     set YYMMDD   = `date -ud "${DATE}" +%y%m%d` #> Convert YYYY-MM-DD to YYMMDD
+```
+
+## 執行成果檢視
+- 邊界條件檔案為一時間變化之2維濃度檔，加上時間及污染項目共4階，非一般的5階濃度檔。 
+- 詳細維度之定義參[FillBcon.py]()、[ECMWF 再分析資料填入D4邊界檔]() 
+
+```python
+nbnd=nc.variables[nms[0]].shape
+#nbnd=(nc.NCOLS+nc.NROWS)*2+4
+```
+- 自西南角開始向東、向北、向西、向南回到原點一圈
+- 目前尚無直接可檢視3度空間變化之程式，必須先將XZ或YZ變成XY，由於IOAPI ncf之維度名稱已經設定不能更動，因此須另寫程式轉檔。
+
 ## 腳本檔案下載
 - [github](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/run_bconMM_RR_DM.csh)
 
+
 ## 參考
+- [USEAP_CMAQ](https://github.com/USEPA/CMAQ)之[run_bcon.csh](https://github.com/USEPA/CMAQ/blob/main/PREP/bcon/scripts/run_bcon.csh)
+- 2BiTT, **mac date命令**, [博客園](https://www.cnblogs.com/qwj-sysu/p/5396372.html),2016-04-15
