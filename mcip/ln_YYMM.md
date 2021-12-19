@@ -1,7 +1,7 @@
 # wrfout檔案之連結
 
 ## 背景
-- 如果`mcip`的批次定義與**WRF**相同，直接在`run_mcip.csh`腳本之設定`wrfout`路徑檔名即可。如果不是，就需要另外的目錄空間，進行前處理（[調整批次定義]()），以另外的名稱輸入`mcip`程式。
+- 如果`mcip`的批次定義與**WRF**相同，直接在`run_mcip.csh`腳本之設定`wrfout`路徑檔名即可。如果不是，就需要另外的目錄空間，進行前處理（[調整批次定義](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/MCIP/add_xtime/)），以另外的名稱輸入`mcip`程式。
 - 為保持彈性，此處採取後者策略，在`$CMAQ_HOME/data/wrfout`下另外建立目錄，儲存檔案的連結，以備`mcip`來讀取。
 
 ## 腳本
