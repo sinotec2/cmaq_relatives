@@ -5,7 +5,7 @@
 - 此處並沒有自前批次結果的最後小時讀取，乃以本批次頭一小時替代，以降低模式初始化的衝擊。
 - 影響到的檔案：
   - 沒有時間序列的檔案：`GRIDBDY2D`、`GRIDCRO2D`、`GRIDDOT2D`、`LUFRAC_CRO`
-  - 具有時間維度的檔案：`METBDY3D`、`METCRO2D`、`METCRO3D`、`METDOT3D`、S`OI_CRO`。
+  - 具有時間維度的檔案：`METBDY3D`、`METCRO2D`、`METCRO3D`、`METDOT3D`、`SOI_CRO`。
 
 ## 腳本與程式
 
