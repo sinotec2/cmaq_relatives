@@ -11,11 +11,26 @@
 ## 腳本程式說明
 
 ### 執行方式
+- 以`csh`環境執行腳本，呼叫[run_mcipMM_RR_DM.csh](https://github.com/sinotec2/cmaq_relatives/blob/master/mcip/run_mcipMM_RR_DM.csh)
+
+```bash
+foreach M (`seq 1 12`)
+   set mon=`printf '%02d' $M`
+   foreach DM ( 'd01' 'd02' 'd04')
+      foreach RUN (`seq 5 12`)
+         cd /data/cmaqruns/2019base
+         source run_mcipMM_RR_DM.csh $mon $RUN $DM # ${JOB}_$mon$RUN$DM 1>&2 
+      end
+   end
+end
+```
 
 ### 分段差異說明
 - 引數、網格系統、資料與家目錄
    - 為了讓同一個腳本應用在不同月份、不同**批序**(批次序號)、不同模擬範圍，讓腳本可以更換執行的條件。
-   - `APPL`個案應用標籤：加上**批序**會更方便與[WRF]()對照。
+   - `APPL`個案應用標籤：加上**批序**會更方便與[WRF](https://sinotec2.github.io/Focus-on-Air-Quality/wind_models/OBSGRID/obsYYMM_run.sh/#%E6%89%B9%E6%AC%A1%E7%9A%84%E5%AE%9A%E7%BE%A9)對照。
+   - 此處沒有`d03`的選項，因為`d02`已經足夠產生`d04`的邊界條件。
+
 ```python
 kuang@114-32-164-198 /Users/cmaqruns/2016base/old_scripts
 $ diff ~/GitHub/cmaq_relatives/mcip/run_mcipMM_RR_DM.csh run_mcip.csh
@@ -52,7 +67,8 @@ $ diff ~/GitHub/cmaq_relatives/mcip/run_mcipMM_RR_DM.csh run_mcip.csh
 > set GridName   = 2016_12SE1        # 16-character maximum
 > 
 ```
--
+- IO目錄之設定
+
 ```python
 146,152c132,135
 < echo $APPL
@@ -67,6 +83,12 @@ $ diff ~/GitHub/cmaq_relatives/mcip/run_mcipMM_RR_DM.csh run_mcip.csh
 > set InGeoDir   = $DataPath/wrf
 > set OutDir     = $DataPath/mcip/$GridName
 > set ProgDir    = $CMAQ_HOME/PREP/mcip/src
+```
+- `wrfout`之連結引用
+   - 此處沒有使用`wrfout`的全名，而是在`bash`腳本中執行連結(see [ln_YYMM.cs])，因為全月的**WRF**模擬主要是以`bash`腳本控制，有較多的範本可以引用。
+   - 使用連結還有一個好處，可以對日期較為自由(事實上`bcon`會比WRF批次多要求**向後**1個小時、`mcip`則會要求**向前**1個小時。)。
+
+```python
 154,155d136
 < echo 'DataPath='$CMAQ_DATA
 < echo 'InMetDir='$InMetDir
@@ -82,16 +104,28 @@ $ diff ~/GitHub/cmaq_relatives/mcip/run_mcipMM_RR_DM.csh run_mcip.csh
 > set InMetFiles = ( $InMetDir/subset_wrfout_d01_2016-07-01_00:00:00 \
 >                    $InMetDir/subset_wrfout_d01_2016-07-02_00:00:00 \
 >                    $InMetDir/subset_wrfout_d01_2016-07-03_00:00:00 )
+```
+- 是否提供`geo_em`檔案
+
+```python
 184,185c161,162
 < set IfGeo      = "T"
 < set InGeoFile  = $InGeoDir/geo_em.${DM}.nc
 ---
 > set IfGeo      = "F"
 > set InGeoFile  = $InGeoDir/geo_em_d01.nc
+```
+- 是否輸出垂直速度。`CCTM_ACONC`也會輸出一份，其實沒有必要在這個階段輸出。
+
+```python
 202c179
 < set LWOUT   = 1
 ---
 > set LWOUT   = 0
+```
+- 起始日期的計算，參考[批次的定義](批次的定義)
+
+```python
 212,217c189,190
 < set BEGD = `date -ud "20${APPL_YR}-${MO}-15 +-1months" +%Y-%m-%d`
 <   @ A = $RUN - 1; @ DD = $A * 4 ; @ ED = $A * 4 + 5
@@ -102,10 +136,18 @@ $ diff ~/GitHub/cmaq_relatives/mcip/run_mcipMM_RR_DM.csh run_mcip.csh
 ---
 > set MCIP_START = 2016-07-02-00:00:00.0000  # [UTC]
 > set MCIP_END   = 2016-07-03-00:00:00.0000  # [UTC]
+```
+- 手動個別設定邊界內縮網格數，不需要另外再設定`BTRIM`
+
+```python
 243c216
 < set BTRIM = -1
 ---
 > set BTRIM = 0
+```
+- 各層網格系統的起始位置、網格數
+
+```python
 260,280d232
 < if ( $DM == 'd00' ) then
 <   set X0    =   1
@@ -133,10 +175,18 @@ $ diff ~/GitHub/cmaq_relatives/mcip/run_mcipMM_RR_DM.csh run_mcip.csh
 > set Y0    =  94
 > set NCOLS =  89
 > set NROWS = 104
+```
+- 蘭伯特投影參考緯度：照個案實際值代入
+
+```python
 300c256
 < set WRF_LC_REF_LAT = 23.61
 ---
 > set WRF_LC_REF_LAT = 40.0
+```
+- 這段是為避免執行過程的警訊，不影響結果。
+
+```python
 475,481d430
 < #add by kuang
 < setenv IOAPI_CHECK_HEADERS  F
@@ -147,11 +197,41 @@ $ diff ~/GitHub/cmaq_relatives/mcip/run_mcipMM_RR_DM.csh run_mcip.csh
 < setenv IOAPI_TEXTMETA NONE	
 482a432
 > setenv IOAPI_CHECK_HEADERS  T
+```
+- 執行方式：與編譯方式有關。
+
+```python
 514c464
 < mpirun -np 1 $ProgDir/${PROG}.exe
 ---
 > $ProgDir/${PROG}.exe
 ```
+
+### ***Mac***版本日期設定與計算方式之差異 
+- ***Mac*** (<)與一般的UNIX(>)有很大的[差異](https://www.cnblogs.com/qwj-sysu/p/5396372.html)，輸入格式`-f`在引數之前設定，日期的加減也是在引數之前。一般(如***centos***)是在引數之後。
+- run**批序**之起始日：前月15日
+
+```bash
+kuang@114-32-164-198 /Users/cmaqruns/2016base
+$ diff mac_mcipMM_RR_DM.csh run_mcipMM_RR_DM.csh
+212c212
+< set BEGD = `date -v-1m -j -f "%Y-%m-%d" "20${APPL_YR}-${MO}-15" +%Y-%m-%d`
+---
+> set BEGD = `date -ud "20${APPL_YR}-${MO}-15 +-1months" +%Y-%m-%d`
+```
+- `BEGD`後的`DD`日與`ED`日
+
+```python
+214,215c214,215
+< set START = `date -v+${DD}d -j -f "%Y-%m-%d" "${BEGD}" +%Y-%m-%d` #> Convert YYYY-MM-DD to YYYYMMDD
+< set ENDDT = `date -v+${ED}d -j -f "%Y-%m-%d" "${BEGD}" +%Y-%m-%d` #> Convert YYYY-MM-DD to YYYYMMDD
+---
+> set START = `date -ud "$BEGD +${DD}days" +%Y-%m-%d`
+> set ENDDT = `date -ud "$BEGD +${ED}days" +%Y-%m-%d`
+```
+
+## 腳本下載
+- [github](https://github.com/sinotec2/cmaq_relatives/blob/master/mcip/run_mcipMM_RR_DM.csh)
 
 ## Reference
 - USEPA, **run_mcip.csh**, [github](https://github.com/USEPA/CMAQ/blob/main/PREP/mcip/scripts/run_mcip.csh)
