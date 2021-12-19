@@ -230,8 +230,13 @@ $ diff mac_mcipMM_RR_DM.csh run_mcipMM_RR_DM.csh
 > set ENDDT = `date -ud "$BEGD +${ED}days" +%Y-%m-%d`
 ```
 
+### mcip轉檔結果的確認
+- `mcip`的結果都是`m3.nc`格式檔案，可以用[VERDI](ttps://github.com/CEMPD/VERDI/blob/master/doc/User_Manual/VERDI_ch01.md)或[MeteoInfo]((http://meteothink.org/))開啟
+- 使用[pr_tflag.py](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/pr_tflag/)亦能快速檢查結果檔案的時間標籤
+
 ## 腳本下載
 - [github](https://github.com/sinotec2/cmaq_relatives/blob/master/mcip/run_mcipMM_RR_DM.csh)
 
 ## Reference
 - USEPA, **run_mcip.csh**, [github](https://github.com/USEPA/CMAQ/blob/main/PREP/mcip/scripts/run_mcip.csh)
+- lizadams, **Visualization Environment for Rich Data Interpretation (VERDI): User’s Manual**, [github](https://github.com/CEMPD/VERDI/blob/master/doc/User_Manual/VERDI_ch01.md), August 03, 2021
