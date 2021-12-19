@@ -38,7 +38,8 @@
 
 
 ### 分段說明
-- 
+- 調用模組
+
 ```python
      1	import netCDF4
      2	import subprocess
@@ -47,7 +48,8 @@
      5	import sys,os
      6	from calendar import monthrange
 ```
--
+- 由所作目錄讀取年月訊息、標籤、變數等等基本定義
+
 ```python     
      7	#working under 16??, the file in directory(or file by link) will be modified
      8	yrmn=subprocess.check_output('pwd',shell=True).decode('utf8').strip('\n').split('/')[-1]
