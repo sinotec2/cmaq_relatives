@@ -1,8 +1,24 @@
 # 整併8個批次wrfout成為全月檔案
 
 ## 背景
+- 全月的空品模擬會減省許多不必要的初始化時間，減少檔案個數，一如CAMx全月模擬的架構。
+- 然而`wrfout`中有不少變數、標籤是以批次起始時間為準的。`wrfout`無法靠簡單的`ncrcat`予以整併。
+     - 
 
-## [add_xtime程式]()說明
+|變數名稱|變數內容|
+|----|----|
+|ACGRDFLX| ACCUMULATED GROUND HEAT FLUX|
+|ACSNOM| ACCUMULATED MELTED SNOW|
+|RAINC| ACCUMULATED TOTAL CUMULUS PRECIPITATION|
+|RAINSH| ACCUMULATED SHALLOW CUMULUS PRECIPITATION|
+|RAINNC| ACCUMULATED TOTAL GRID SCALE PRECIPITATION|
+|SNOWNC| ACCUMULATED TOTAL GRID SCALE SNOW AND ICE|
+|GRAUPELNC| ACCUMULATED TOTAL GRID SCALE GRAUPEL|
+|HAILNC| ACCUMULATED TOTAL GRID SCALE HAIL|
+|ACHFX| ACCUMULATED UPWARD HEAT FLUX AT THE SURFACE|
+|ACLHF| ACCUMULATED UPWARD LATENT HEAT FLUX AT THE SURFACE|
+
+## [add_xtime程式](https://github.com/sinotec2/cmaq_relatives/blob/master/mcip/add_xtime.py)說明
 
 
 ### 分段說明
@@ -72,3 +88,6 @@
     62	      nc.close()
     63	
 ```
+
+## 程式下載
+- [github](https://github.com/sinotec2/cmaq_relatives/blob/master/mcip/add_xtime.py)
