@@ -36,7 +36,7 @@ foreach BSN ('JJZ' 'SCH' 'YZD' 'FWS' 'NEC' 'NWC')
 end
 ```
 #### 執行腳本
-- [run_isamMM_RR_DM.csh2](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/run_isamMM_RR_DM.csh2)
+- [run_isamMM_RR_DM.csh](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/run_isamMM_RR_DM.csh)
 
 ### 程式名稱
 - [SA_PM10.py](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/SA_PM10.py)
