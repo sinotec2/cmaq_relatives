@@ -52,7 +52,7 @@
                116.918619955,34.09428245300003,0                
 ...               
 ```
-## [rd_kml.py]()
+## [rd_kml.py](https://github.com/sinotec2/cmaq_relatives/blob/master/land/gridmask/rd_kml.py)
 
 ### 程式分段說明
 - 模組之調用
@@ -127,7 +127,7 @@
     37	df.set_index('lon').to_csv('doc.csv')
 ```
 ## 程式下載
-- [github]()
+- [github](https://github.com/sinotec2/cmaq_relatives/blob/master/land/gridmask/rd_kml.py)
 
 ## Reference
 - wiki, **Keyhole標記語言**, [wiki](https://zh.wikipedia.org/wiki/KML), 2021年2月7日.
