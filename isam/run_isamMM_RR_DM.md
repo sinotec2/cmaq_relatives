@@ -9,7 +9,7 @@
 相關研究發表不少，詳見下列參考文獻。使用範例、手冊等請參考[官網](https://www.epa.gov/cmaq/integrated-source-apportionment-method-cmaq-isam)。
 
 - 執行**CMAQ-ISAM**的腳本與執行`CCTM`是同一個。然實際全年、全月的模擬還有許多設定需要修改。
-- **CMAQ-ISAM**不必特別處理排放量，EPA設計讓所有的排放開關控制對照，都些在`EmissCtrl`檔案內，藉該檔案來控制特定地區污染排放的開啟或關閉。
+- **CMAQ-ISAM**不必特別處理排放量，EPA設計讓所有的排放開關控制對照表，都寫在`EmissCtrl`檔案內，藉該檔案來控制特定地區污染排放的開啟或關閉。詳[EmissCtrl_cb6r3_ae7_aq.nml範例](https://github.com/USEPA/CMAQ/blob/main/CCTM/src/MECHS/cb6r3_ae7_aq/EmissCtrl_cb6r3_ae7_aq.nml)。
 
 
 ## `EmissCtrl`檔案之地區控制(`RegionsRegistry`)
@@ -146,7 +146,7 @@ ENDLIST eof
 |ISAM_REGIONS|path/filename|optional ISAM regions files|`/nas1/cmaqruns/2018base/data/land/gridmask/AQFZones_EAsia_81K.nc`|
 
 ## 其他設定
-- 官方教學或示範都是以個案方式，實務上有批次間相連的困難。此處以官網最新腳本範例(`v533`)比較說明
+- 官方教學或示範都是以個案方式，實務上有批次間相連的困難。此處以官網[最新腳本範例](https://raw.githubusercontent.com/USEPA/CMAQ/main/CCTM/scripts/run_cctm_Bench_2016_12SE1.csh)(`v533`)比較說明
 - **ISAM**也有其初始狀態(`$ISAM_NEW_START`)。此處以每月第1批次(`run5`)為初始。其他批次、或同一批次其他天則為接序執行。
 
 ```bash
@@ -189,7 +189,8 @@ $ diff run_isamMM_RR_DM.csh2 ../2016base/old_scripts/run_cctm_Bench_2016_12SE1.c
 <          endif
 ```
 - 測試是否存在`ISAM_PREVDAY`檔案，如果不存在，表示是跨批次執行，要把前1批次最末小時結果連結到本批次目錄。
-  - 如果真的也沒有分地區之執行結果，至少把全區結果連過來。如果連全區也沒有，腳本就會中斷，必須先產生一個`CCTM_SA_CGRID`檔案出來。
+  - 如果真的也沒有分地區之執行結果，至少把全區結果連過來。
+  - 如果連全區也沒有，腳本就會中斷，必須先產生一個`CCTM_SA_CGRID`檔案出來(符合[變數命名規則](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/ISAM/SA_PM10/#%E8%83%8C%E6%99%AF)即可)。
 
 ```python
 <          if (! (-e $ISAM_PREVDAY )) then
@@ -212,7 +213,6 @@ $ diff run_isamMM_RR_DM.csh2 ../2016base/old_scripts/run_cctm_Bench_2016_12SE1.c
 ---
 >           setenv ISAM_NEW_START N
 >           setenv ISAM_PREVDAY "$OUTDIR/CCTM_SA_CGRID_${RUNID}_${YESTERDAY}.nc"
-
 ```
 
 ## Reference
