@@ -145,7 +145,7 @@ ENDLIST eof
 |SA_CGRID_1|path/filename|ISAM output for a restart file to continue the simulation further in time|`"$OUTDIR/CCTM_SA_CGRID_${CTM_APPL}_${BSN}.nc -v"`|
 |ISAM_REGIONS|path/filename|optional ISAM regions files|`/nas1/cmaqruns/2018base/data/land/gridmask/AQFZones_EAsia_81K.nc`|
 
-## 其他設定
+## 初始化與批次連接之設定
 - 官方教學或示範都是以個案方式，實務上有批次間相連的困難。此處以官網[最新腳本範例](https://raw.githubusercontent.com/USEPA/CMAQ/main/CCTM/scripts/run_cctm_Bench_2016_12SE1.csh)(`v533`)比較說明
 - **ISAM**也有其初始狀態(`$ISAM_NEW_START`)。此處以每月第1批次(`run5`)為初始。其他批次、或同一批次其他天則為接序執行。
 
