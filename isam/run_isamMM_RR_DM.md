@@ -147,7 +147,7 @@ ENDLIST eof
 
 ## 初始化與批次連接之設定
 - 官方教學或示範都是以個案方式，實務上有批次間相連的困難。此處以官網[最新腳本範例](https://raw.githubusercontent.com/USEPA/CMAQ/main/CCTM/scripts/run_cctm_Bench_2016_12SE1.csh)(`v533`)比較說明
-- **ISAM**也有其初始狀態(`$ISAM_NEW_START`)。此處以每月第1批次(`run5`)為初始。其他批次、或同一批次其他天則為接序執行。
+- **ISAM**也有其初始狀態(`$ISAM_NEW_START`)。此處以每月第1批次(`run5`)為初始。其他批次、或同一批次其他天則為接續執行。
 
 ```bash
 (base)
@@ -162,13 +162,14 @@ $ diff run_isamMM_RR_DM.csh2 ../2016base/old_scripts/run_cctm_Bench_2016_12SE1.c
 >           setenv ISAM_NEW_START Y
 >           setenv ISAM_PREVDAY
 ```
-  - 此段專為特定月份、特定批次編號執行**ISAM**之方便門
+- 此段專為特定月份、特定批次編號執行**ISAM**之方便門
+  - 範例為執行4月第6批次(4/4~9)之**CCTM_ISAM**
 
 ```python
 530,561c461,462
 <          echo 'kuang' #in case of another run or another days
 <          setenv ISAM_NEW_START N
-<          if ( $MO == '04' && $RUN == 5 && $TODAYJ == $START_DAY ) then
+<          if ( $MO == '04' && $RUN == 6 && $TODAYJ == $START_DAY ) then
 <            setenv ISAM_NEW_START Y
 <            setenv ISAM_PREVDAY
 <          endif
