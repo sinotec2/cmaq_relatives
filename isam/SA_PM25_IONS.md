@@ -2,7 +2,7 @@
 # ISAM結果檔案之讀取(PM25_IONS)
 
 ## 背景
-- 由於**ISAM**並未設計給**PM25_IONS**的追蹤使用，因此也找不到類似`combine`的後處理程式，可以整合**CMAQ-ISAM**執行的成果。只能自行撰寫程式整併所有的氣膠成分。
+- 雖然**ISAM**設計輸出**PM25_IONS**的成分與其來源追蹤，但結果並沒有一個變數項目稱為**PM25_IONS**，也找不到類似`combine`的後處理程式，可以整合**CMAQ-ISAM**執行的成果，因此只能自行撰寫程式。
   - CMAQ-ISAM執行的成果`CCTM_SA_ACONC`變數的命名規則：以底線(`_`)區隔之複合變數`spec_group`，其中：
     - `spec`=`CCTM_ACONC`的[污染項目名稱](https://github.com/USEPA/CMAQ/blob/main/CCTM/src/MECHS/mechanism_information/cb6mp_ae6_aq/AE6_species_table.md)
     - `group`=`isam_control.txt`檔案裏定義的`TAG_NAME`，另外還包括`ICON`、`BCON`、`OTHR`等固定內設的標籤。
