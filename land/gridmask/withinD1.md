@@ -4,7 +4,7 @@
 - 本項作業由`kml`格式之[向量檔案讀成格柵檔](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/GIS/rd_kml/)，再利用`shapely.with`[判斷分區](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/GIS/shape_to_raster/#%E5%96%AE%E4%B8%80%E5%A4%9A%E9%82%8A%E5%BD%A2within%E4%B9%8B%E5%88%A4%E5%88%A5)
 - 目標產生東亞(主要是中國大陸)地理分區的**網格遮罩**(gridmask)檔案，其內容要求與範例詳見[ISAM手冊](https://github.com/USEPA/CMAQ/blob/main/DOCS/Users_Guide/CMAQ_UG_ch11_ISAM.md)。
 
-## [withinD1.py](https://github.com/sinotec2/cmaq_relatives/blob/master/land/gridmask/withinD1.py)程式說名
+## [withinD1.py](https://github.com/sinotec2/cmaq_relatives/blob/master/land/gridmask/withinD1.py)程式說明
 
 ### IO檔案
 - 輸入檔
@@ -13,7 +13,7 @@
   - `d01`範圍之`nc`檔模版：`PM25_202001-05_d1.nc`
 - 輸出檔
   - 多邊形之頂點座標(檢核用)：`doc.csv`
-  - 原`nc`檔模版：改成地理分區邊號(1~7)，[VERDI]()檢核用
+  - 原`nc`檔模版：改成地理分區編號(1~7)，[VERDI]()檢核用
   - 地理分區的**網格遮罩**(gridmask)檔案：`AQFZones_EAsia_81K.nc`
 
 ### 分段說明
@@ -80,6 +80,7 @@
     51	
 ```
 - 由`csv`檔讀取名稱及分區對照
+  - `dist`為名稱與編號的對照。雖然只是按順序排列的對照關係，但是字典對照表(`dict`)會比`.index()`快很多。
 
 ```python
     52	#form the dict of name to district from csv file
@@ -118,10 +119,10 @@
     79	
 ```
 - 每個多邊形依序進行`within`之判斷，
-  - 全部網格系統的點同時進行判斷
-  - 判斷結果轉成2維矩陣，並以`np.where`找到布林值為`真`的位置
-  - 批次將這些位置給定1\~7之分區編號
-  - 回存編號值後存檔(進行[VERDI]()檢查)
+  - 全部網格系統的點位依序進行判斷
+  - 判斷結果轉成2維矩陣，並以`np.where`找到布林值為`真`的位置(`idx`)
+  - 以批次方式將這些位置之`DIS`矩陣給定1\~7之分區編號
+  - 回存編號值後存檔(進行[VERDI]()檢查，詳下)
 
 ```python
     80	#store the index of districts(1~7) for each grids for VERDI cheking
@@ -140,9 +141,9 @@
   - 切割時間長度
   - 新增每個分區的變數名稱、單位、敘述等內容
   - 按照每個編號的網格位置，填入1.0的值
-  - 最後再將原有模版中的變數予以去除
+  - 最後再將原有模版中的變數(`NO`及`PM25`)予以去除
 
-```
+```python
     91	ncks=subprocess.check_output('which ncks',shell=True).decode('utf8').strip('\n')
     92	system(ncks+' -O -d TSTEP,0,0 PM25_202001-05_d1.nc AQFZones_EAsia_81K.nc')
     93	nc1=netCDF4.Dataset('AQFZones_EAsia_81K.nc','r+')
