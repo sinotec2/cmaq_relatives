@@ -116,7 +116,7 @@ nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
 v4=list(set([i.split('_')[0] for i in V[3]]));v4.sort()
 grp=list(set([i.split('_')[1] for i in V[3]]));grp.sort()
 ```
-- `PM25_IONS`的定義
+- `PM`的所有可能成分。由於**ISAM**只會輸出`PM25_IONS`的成分，包括在`aer`集合之內。
 
 ```python
 Sulfate='ASO4I ANO3I ANH4I ACLI ASO4J ANO3J ANH4J ASO4K ANO3K ANH4K'.split()
