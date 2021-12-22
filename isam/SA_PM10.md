@@ -145,7 +145,7 @@ for g in grp:
     nco['TFLAG'][t,0,:]=nc['TFLAG'][t,0,:]
 ```
 - 累加`PM10`
-  - 因**ISAM**未處理氯離子，矩陣無內容，因此須研判是否為`nan`，以避免被`netCDF4`[遮蔽](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/masked/)
+  - 因**ISAM**未處理氯離子等很多項目，矩陣無內容，因此須研判是否為`nan`，以避免被`netCDF4`[遮蔽](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/masked/)
 
 ```python
   var=np.zeros(shape=(nt,nlay,nrow,ncol))
@@ -160,6 +160,9 @@ for g in grp:
 ## 程式下載
 - 主程式[SA_PM10.py](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/SA_PM10.py)
 - 執行腳本[proc.cs](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/proc.cs)
+
+## 成果檢視
+- Northwestern China Source Contributions ![](https://youtu.be/lh7Eq-um-Ng)
 
 ## Reference
 - 中華人民共和國生態環境部, **空氣品質預報**, [生態環境部官網](http://big5.mee.gov.cn/gate/big5/www.mee.gov.cn/hjzl/dqhj/kqzlyb/)
