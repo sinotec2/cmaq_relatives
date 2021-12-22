@@ -4,7 +4,7 @@
 - 本項作業由`kml`格式之[向量檔案讀成格柵檔](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/GIS/rd_kml/)，再利用`shapely.with`[判斷分區](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/GIS/shape_to_raster/#%E5%96%AE%E4%B8%80%E5%A4%9A%E9%82%8A%E5%BD%A2within%E4%B9%8B%E5%88%A4%E5%88%A5)
 - 目標產生東亞(主要是中國大陸)地理分區的**網格遮罩**(gridmask)檔案，其內容要求與範例詳見[ISAM手冊](https://github.com/USEPA/CMAQ/blob/main/DOCS/Users_Guide/CMAQ_UG_ch11_ISAM.md)。
 
-## withinD1.py程式說名
+## [withinD1.py](https://github.com/sinotec2/cmaq_relatives/blob/master/land/gridmask/withinD1.py)程式說名
 
 ### IO檔案
 - 輸入檔
@@ -162,7 +162,7 @@
 ```
 
 ## 程式下載
-- [github]()
+- [github](https://github.com/sinotec2/cmaq_relatives/blob/master/land/gridmask/withinD1.py)
 
 ## Reference
 - USEPA, **Integrated Source Apportionment Method (CMAQ-ISAM)**, CMAQ User's Guide (c) 2021, [github](https://github.com/USEPA/CMAQ/blob/main/DOCS/Users_Guide/CMAQ_UG_ch11_ISAM.md), Latest commit  on 18 Aug, 2021
