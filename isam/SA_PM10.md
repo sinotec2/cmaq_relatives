@@ -2,8 +2,8 @@
 # ISAM結果檔案之讀取(PM10)
 
 ## 背景
-- 目前似乎還找不到類似`combine`的後處理程式，可以解析**CMAQ-ISAM**執行的成果。如果是單一污染物(如臭氧`O3`)還好，可以直接讀取`nc`檔案，如果是綜合性污染物(`PM10`)，那就困難了。
-  - CMAQ-ISAM執行的成果`CCTM_SA_ACONC`變數的命名方式：`spec_group`
+- 由於**ISAM**並未設計給**PM10**的追蹤使用，因此也找不到類似`combine`的後處理程式，可以整合**CMAQ-ISAM**執行的成果。只能自行撰寫程式整併所有的氣膠成分。
+  - CMAQ-ISAM執行的成果`CCTM_SA_ACONC`變數的命名規則：以底線(`_`)區隔之複合變數`spec_group`，其中：
     - `spec`=`CCTM_ACONC`的[污染項目名稱](https://github.com/USEPA/CMAQ/blob/main/CCTM/src/MECHS/mechanism_information/cb6mp_ae6_aq/AE6_species_table.md)
     - `group`=`isam_control.txt`檔案裏定義的`TAG_NAME`，另外還包括`ICON`、`BCON`、`OTHR`等固定內設的標籤。
 - 綜合性污染物的定義：可以參考`$REPO_HOME/POST/combine/scripts/spec_def_files/SpecDef_${MECH}.txt`的內容
@@ -67,7 +67,7 @@ end
   - 加總結果檔名：`PM10${z}_2018040${d}.nc`  
 - 合併(照日期附加)
   - 使用[ncrcat]()程式
-  - 可以用[VERDI]檢視之
+  - 可以用[VERDI]()檢視之
 
 ```bash
 #isam job for 20180404~8, 6 AirQualityForecastZone(AQFS), only GR1~4 and PTA are taken into account
