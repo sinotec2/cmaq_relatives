@@ -164,6 +164,10 @@
 ## 程式下載
 - [github](https://github.com/sinotec2/cmaq_relatives/blob/master/land/gridmask/withinD1.py)
 
+## 成果檢視
+中國大陸空品質量預報分區圖
+![](https://github.com/sinotec2/Focus-on-Air-Quality/raw/main/assets/images/gridmask_d1.PNG)
+
 ## Reference
 - USEPA, **Integrated Source Apportionment Method (CMAQ-ISAM)**, CMAQ User's Guide (c) 2021, [github](https://github.com/USEPA/CMAQ/blob/main/DOCS/Users_Guide/CMAQ_UG_ch11_ISAM.md), Latest commit  on 18 Aug, 2021
 - Tyler Erickson, **pyKML v0.1.0 documentation**,[pythonhosted](https://pythonhosted.org/pykml/), 2011
