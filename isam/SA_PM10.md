@@ -38,6 +38,9 @@ end
 #### 執行腳本
 - [run_isamMM_RR_DM.csh](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/run_isamMM_RR_DM.csh)
 
+#### 腳本說明
+- [執行CMAQ-ISAM](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/ISAM/run_isamMM_RR_DM/)
+
 ### 程式名稱
 - [SA_PM10.py](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/SA_PM10.py)
 
