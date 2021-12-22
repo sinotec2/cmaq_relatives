@@ -77,8 +77,8 @@
 - **地區**控制(`RegionsRegistry`)詳見前述
 - `isam_control.txt`檔案範例如下
   * 驚嘆號`!`後為註解
-  * `TAG CLASSES`：欲追蹤的空品項目。選項有**9項**。不是所有的物質都納入**CMAQ_ISAM**計算。(**PM10**似乎就不在其列)
-  * `TAG NAME`：排放標籤，在`CCTM_SA_*`檔案中的變數名稱中會出現，詳[ISAM結果檔案之讀取(PM10)](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/ISAM/SA_PM10)背景說明。
+  * `TAG CLASSES`：欲追蹤的空品項目。選項有**9項**。不是所有的物質都納入**CMAQ_ISAM**計算。(**PM25_IONS**似乎就不在其列)
+  * `TAG NAME`：排放標籤，在`CCTM_SA_*`檔案中的變數名稱中會出現，詳[ISAM結果檔案之讀取(PM25_IONS)](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/ISAM/SA_PM25_IONS)背景說明。
   * `REGION(S)`：可以是一**地區**(前述`Region Label`的值)、地區的**序列**(以`,`隔開)、或**所有**地區(`EVERYWHERE`，詳前述`RGN_NML`最末行)
   * `EMIS STREAM(S)`：即為[run_cctm.csh]()檔案中的`GR_EMIS_LAB_001`、`STK_EMIS_LAB_001`等等
   * `ENDLIST eof`： **E**nd **O**f **F**ile
@@ -191,7 +191,7 @@ $ diff run_isamMM_RR_DM.csh2 ../2016base/old_scripts/run_cctm_Bench_2016_12SE1.c
 ```
 - 測試是否存在`ISAM_PREVDAY`檔案，如果不存在，表示是跨批次執行，要把前1批次最末小時結果連結到本批次目錄。
   - 如果真的也沒有分地區之執行結果，至少把全區結果連過來。
-  - 如果連全區也沒有，腳本就會中斷，必須先產生一個`CCTM_SA_CGRID`檔案出來(符合[變數命名規則](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/ISAM/SA_PM10/#%E8%83%8C%E6%99%AF)即可)。
+  - 如果連全區也沒有，腳本就會中斷，必須先產生一個`CCTM_SA_CGRID`檔案出來(符合[變數命名規則](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/ISAM/SA_PM25_IONS/#%E8%83%8C%E6%99%AF)即可)。
 
 ```python
 <          if (! (-e $ISAM_PREVDAY )) then
