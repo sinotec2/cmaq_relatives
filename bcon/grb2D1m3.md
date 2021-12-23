@@ -224,6 +224,13 @@
    143	
 ```
 
+## 結果檢視
+- VERDI 濃度水平分布[mov](https://youtu.be/S3z9j7V-O0w)
+![]()
+- VERDI 濃度垂直分布[mov](https://youtu.be/tiXA1L3IaEI)
+![]()
+
+
 ## 程式下載
 - [github](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/grb2D1m3.py)
 
