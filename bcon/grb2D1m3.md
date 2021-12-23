@@ -155,7 +155,7 @@
    114	  dens2[:,k,:,:]=dens[:,dlay[k],:,:]
 ```
 - 讀取EAC4濃度內容，進行空間內插
-  - EAC4的高度方式自頂到底、緯度自北向南，與`m3.nc`定義相反，需要進行[翻轉]https://vimsky.com/zh-tw/examples/usage/python-numpy.flip.html)(`np.flip`)，4個軸中高度、緯度分別是第1、2軸。
+  - EAC4的高度方式自頂到底、緯度自北向南，與`m3.nc`定義相反，需要進行[翻轉](https://vimsky.com/zh-tw/examples/usage/python-numpy.flip.html)(`np.flip`)，4個軸中高度、緯度分別是第1、2軸。
   - 翻轉後矩陣、併同前述d01網格座標系統，一起呼叫griddata進行(線性)內插。
 
 ```python
@@ -185,7 +185,7 @@
    130	  if v in nms_gas:
    131	    nc1.variables[nms_gas[v]][:]=var2[:]*rate[v][0] * 28.E6/mws[dic[v]] #mixing ratio to ppm
 ```
-- 粒狀物單位轉換(重量混合比轉$\mu g/M^3)
+- 粒狀物單位轉換(重量混合比轉$$ $\mu g/M^3 $$)
 
 ```python
    132	  else:
