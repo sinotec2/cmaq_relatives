@@ -185,7 +185,7 @@
    130	  if v in nms_gas:
    131	    nc1.variables[nms_gas[v]][:]=var2[:]*rate[v][0] * 28.E6/mws[dic[v]] #mixing ratio to ppm
 ```
-- 粒狀物單位轉換(重量混合比轉 $\mu g/M^3$)
+- 粒狀物單位轉換(重量混合比轉 $\mu$ g/M<sup>3</sup>)
 
 ```python
    132	  else:
