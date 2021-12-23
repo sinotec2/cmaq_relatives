@@ -235,6 +235,10 @@
    143	
 ```
 
+### m3.nc檔案之後處理(combine)
+- 複製一個完整批次的`CCTM_ACONC`檔案做為容器
+- 擷取全月結果中該批次的日期部分，將濃度值倒入容器，即可進行CMAQ的後處理`combine.exe`，整併VOCs、PM10、PM2.5等項目。
+
 ## 結果檢視
 - 2018/4/5～6 大陸沙塵暴之EAC4濃度**水平**分布[mov](https://youtu.be/S3z9j7V-O0w)
 ![](https://github.com/sinotec2/Focus-on-Air-Quality/raw/main/assets/images/20180405eac4H.PNG)
