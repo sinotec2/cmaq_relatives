@@ -2,8 +2,19 @@
 
 ## 背景
 
-## [grb2D1m3.py]()程式說明
+## [grb2D1m3.py](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/grb2D1m3.py)程式說明
 
+### 引數
+- [grb2D1m3.py](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/grb2D1m3.py) [YYMM.nc]((https://sinotec2.github.io/Focus-on-Air-Quality/AQana/GAQuality/ECMWF/EC_ReAna/#%E6%A9%AB%E5%90%91%E5%90%88%E4%BD%B5))
+
+### I/O檔案
+- Inputs
+  - BCON模版
+  - `m3.nc`模版
+  - 逐日密度檔案
+- Output
+  - *YYMM*D1.m3.nc
+  
 ### 分段說明
 - 使用scipy的griddata進行水平的內插
 - 將dt2jul、jul2dt寫成副程式`dtconvertor`，簡化程式版面
@@ -205,6 +216,9 @@
    142	nc1.close()
    143	
 ```
+
+## 程式下載
+- [github](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/grb2D1m3.py)
 
 ## Reference
 - 純淨天空, **python numpy flip用法及代碼示例**, [vimsky](https://vimsky.com/zh-tw/examples/usage/python-numpy.flip.html)
