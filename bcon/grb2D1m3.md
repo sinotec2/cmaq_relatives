@@ -15,10 +15,10 @@
   - `m3.nc`模版
   - 逐日密度檔案
 - JSON's
-  - [dic.json]()={eac4污染物代碼：污染物名稱}
-  - [mws.json]()={污染物名稱：分子量}
-  - [nms_gas.json]()：{eac4污染物代碼：CMAQ污染物名稱}
-  - [nms_part.json]()：{eac4污染物代碼：CMAQ污染物名稱**序列**}
+  - [dic.json](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/dic.json)={eac4污染物代碼：污染物名稱}
+  - [mws.json](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/mws.json)={污染物名稱：分子量}
+  - [nms_gas.json](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/nms_gas.json)：{eac4污染物代碼：CMAQ污染物名稱}
+  - [nms_part.json](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/nms_part.json)：{eac4污染物代碼：CMAQ污染物名稱**序列**}
 - Output
   - *YYMM*D1.m3.nc
 
