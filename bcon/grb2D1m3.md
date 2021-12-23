@@ -12,9 +12,14 @@
   - BCON模版
   - `m3.nc`模版
   - 逐日密度檔案
+- JSON's
+  - dic.json={eac4污染物代碼：污染物名稱}
+  - mws.json={污染物名稱：分子量}
+  - nms_gas.json：{eac4污染物代碼：CMAQ污染物名稱}
+  - nms_part.json：{eac4污染物代碼：CMAQ污染物名稱**序列**}
 - Output
   - *YYMM*D1.m3.nc
-  
+
 ### 分段說明
 - 使用scipy的griddata進行水平的內插
 - 將dt2jul、jul2dt寫成副程式`dtconvertor`，簡化程式版面
