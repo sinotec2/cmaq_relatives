@@ -1,12 +1,23 @@
 # EAC4檔案轉成m3.nc格式
 
 ## 背景
+- 歐洲中期天氣預報中心(ECMWF)之EAC4 ([ECMWF Atmospheric Composition Reanalysis 4](https://ads.atmosphere.copernicus.eu/cdsapp#!/dataset/cams-global-reanalysis-eac4?tab=overview))數據下載整併後，此處將其轉成`m3.nc`檔案，以供[VERDI]()等顯示軟體、以及後續光化模式所需。
+- 由於EAC4粒狀物單位(重量混合比)轉換過程需要大氣的密度，不單是高度的函數，也隨著天氣系統而有時空的變化。可以由[mcip](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/MCIP/run_mcipMM_RR_DM/)計算結果（`METCRO3D`）中讀取，需在執行轉換前預備好。
+
+## 逐日密度檔案之準備
+- 由於此處EAC4檔案的時間範圍為全月，而mcip結果是彼此會有重疊的批次作業，因此先以[brk_day.cs](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/brk_day/)拆解、逐日讀取，以降低複雜度。
+  - 先以`ncks`讀取`METCRO3D`檔案中的密度(`DENS`)及時間標籤
+  - 再以[brk_day.cs](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/brk_day/)拆解成逐日檔案備用
+  - 密度單位kg/M<sup>3</sup>
+
+```bash
+```
 
 ## [grb2D1m3.py](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/grb2D1m3.py)程式說明
 
 ### 引數
 - [grb2D1m3.py](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/grb2D1m3.py) *YYMM*.nc
-  - 為EAC4下載、轉檔、[合併之結果](https://sinotec2.github.io/Focus-on-Air-Quality/AQana/GAQuality/ECMWF/EC_ReAna/#%E6%A9%AB%E5%90%91%E5%90%88%E4%BD%B5)
+  - 為EAC4[下載](https://sinotec2.github.io/Focus-on-Air-Quality/AQana/GAQuality/ECMWF/EC_ReAna/)、[轉檔](https://sinotec2.github.io/Focus-on-Air-Quality/AQana/GAQuality/ECMWF/EC_ReAna/#%E8%BD%89%E6%AA%94)、[合併之結果](https://sinotec2.github.io/Focus-on-Air-Quality/AQana/GAQuality/ECMWF/EC_ReAna/#%E6%A9%AB%E5%90%91%E5%90%88%E4%BD%B5)
 
 ### I/O檔案
 - Inputs
@@ -98,7 +109,7 @@
 ```
 - 讀取`m3.nc`模版
   - 污染項目需事先按照`nms_gas`和`nms_part`的對照表挑選污染項目。
-  - 先對時間進行展開
+  - 先對時間進行展開。由於模版污染項目總數即為`nms_gas`和`nms_part`值的總數，因此不會有未給定而被遮蔽的情形，不必花時間將矩陣全部清空。
 
 ```python
     54	N='D1'
@@ -173,8 +184,8 @@
    114	  dens2[:,k,:,:]=dens[:,dlay[k],:,:]
 ```
 - 讀取EAC4濃度內容，進行空間內插
-  - EAC4的高度方式自頂到底、緯度自北向南，與`m3.nc`定義相反，需要進行[翻轉](https://vimsky.com/zh-tw/examples/usage/python-numpy.flip.html)(`np.flip`)，4個軸中高度、緯度分別是第1、2軸。
-  - 翻轉後矩陣、併同前述d01網格座標系統，一起呼叫griddata進行(線性)內插。
+  - EAC4的**高度**方向自頂到底、**緯度**自北向南，與`m3.nc`定義相反，需要進行[翻轉](https://vimsky.com/zh-tw/examples/usage/python-numpy.flip.html)(`np.flip`)，4個軸中**高度**、**緯度**分別是第1、2軸。
+  - 翻轉後矩陣、併同前述d01網格座標系統，一起輸入griddata模組進行(線性)內插。
 
 ```python
    115	var=np.zeros(shape=(nt, nlay, nrow, ncol))
@@ -204,7 +215,7 @@
    131	    nc1.variables[nms_gas[v]][:]=var2[:]*rate[v][0] * 28.E6/mws[dic[v]] #mixing ratio to ppm
 ```
 - 粒狀物單位轉換(重量混合比轉 &mu; g/M<sup>3</sup>)
-
+  
 ```python
    132	  else:
    133	#    unit=1E9*dens[:] #28.E6/mvol #mixing ratio(kg/kg) to microgram/M3
@@ -224,15 +235,19 @@
    143	
 ```
 
-## 結果檢視
-- VERDI 濃度水平分布[mov](https://youtu.be/S3z9j7V-O0w)
-![]()
-- VERDI 濃度垂直分布[mov](https://youtu.be/tiXA1L3IaEI)
-![]()
+### m3.nc檔案之後處理(combine)
+- 複製一個完整批次的`CCTM_ACONC`檔案做為容器
+- 擷取全月結果中該批次的日期部分，將濃度值倒入容器，即可進行CMAQ的後處理`combine.exe`，整併VOCs、PM10、PM2.5等項目。
 
+## 結果檢視
+- 2018/4/5～6 大陸沙塵暴之EAC4濃度**水平**分布[mov](https://youtu.be/S3z9j7V-O0w)
+![](https://github.com/sinotec2/Focus-on-Air-Quality/raw/main/assets/images/20180405eac4H.PNG)
+- 2018/4/5～6 大陸沙塵暴之EAC4濃度**垂直**分布（臺灣為中心）[mov](https://youtu.be/tiXA1L3IaEI )
+![](https://github.com/sinotec2/Focus-on-Air-Quality/raw/main/assets/images/20180405eac4V.PNG)
 
 ## 程式下載
 - [github](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/grb2D1m3.py)
 
 ## Reference
+- ECMWF, **EAC4 (ECMWF Atmospheric Composition Reanalysis 4)**, [copernicus](https://ads.atmosphere.copernicus.eu/cdsapp#!/dataset/cams-global-reanalysis-eac4?tab=overview),record updated 2021-12-07 16:10:05 UTC
 - 純淨天空, **python numpy flip用法及代碼示例**, [vimsky](https://vimsky.com/zh-tw/examples/usage/python-numpy.flip.html)
