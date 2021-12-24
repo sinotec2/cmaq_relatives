@@ -5,10 +5,10 @@
 - 由於EAC4粒狀物單位(重量混合比)轉換過程需要大氣的密度，不單是高度的函數，也隨著天氣系統而有時空的變化。可以由[mcip](https://sinotec2.github.io/Focus-on-Air-Quality/GridModels/MCIP/run_mcipMM_RR_DM/)計算結果（`METCRO3D`）中讀取，需在執行轉換前預備好。
 
 ## 逐日密度檔案之準備
-- 由於此處EAC4檔案的時間範圍為全月，而mcip結果是彼此會有重疊的批次作業，因此先以[brk_day.cs](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/brk_day/)拆解、逐日讀取，以降低複雜度。
+- 由於此處EAC4檔案的時間範圍為全月，而mcip結果是彼此會有重疊的批次作業，因此需以[brk_day.cs](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/brk_day/)拆解、讓程式可以逐日讀取，以降低複雜度。
   - 先以`ncks`讀取`METCRO3D`檔案中的密度(`DENS`)及時間標籤
   - 再以[brk_day.cs](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/brk_day/)拆解成逐日檔案備用
-  - 密度單位kg/M<sup>3</sup>
+  - 密度單位kg/M<sup>3</sup>，此處未更動，在主程式中進行轉換
 
 ```bash
 for r in {5..12};do 
@@ -21,7 +21,7 @@ RHO.20180331.nc  RHO.20180405.nc  RHO.20180410.nc  RHO.20180415.nc  RHO.20180420
 ...
 RHO.20180404.nc  RHO.20180409.nc  RHO.20180414.nc  RHO.20180419.nc  RHO.20180424.nc  RHO.20180429.nc  RHO.20211221.nc
 ```
-- Note:[brk_day2.cs](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/brk_day/)的引數必須以*YYMM*做為主檔名的最後標籤。
+- Note:[brk_day2.cs](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/brk_day/)的引數必須以*YYMM*做為主檔名的最後標籤。(如範例中的RHO.*1804*.nc)。
 
 ## [grb2D1m3.py](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/grb2D1m3.py)程式說明
 
