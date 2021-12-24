@@ -162,10 +162,38 @@ for g in grp:
 - 執行腳本[proc.cs](https://github.com/sinotec2/cmaq_relatives/blob/master/isam/proc.cs)
 
 ## 成果檢視
-- [Fen_Wei Plains and ShanXi(FWS) Source Contributions](https://youtu.be/8EbU2FIIOTU)
-- [Northwestern China(NWC) Source Contributions](https://youtu.be/lh7Eq-um-Ng)
-- [Northern China(JJZ) Source Contributions](https://youtu.be/L2EwOOjxJC4)
-- [Eastern China(YZD) Source Contributions](https://youtu.be/A9wQUbw_8yc)
+- 大陸沙塵個案之**CMAQ-ISAM**執行成果Youtube動畫
+  - [Fen_Wei Plains and ShanXi(FWS) Source Contributions](https://youtu.be/8EbU2FIIOTU)
+  - [Northwestern China(NWC) Source Contributions](https://youtu.be/lh7Eq-um-Ng)
+  - [Northern China(JJZ) Source Contributions](https://youtu.be/L2EwOOjxJC4)
+  - [Eastern China(YZD) Source Contributions](https://youtu.be/A9wQUbw_8yc)
+- 萬里觀測與各分區貢獻濃度之時間序列
+![](https://github.com/sinotec2/Focus-on-Air-Quality/raw/main/assets/images/20180404ISAM-wanli.PNG)
+- 時間序列以下列簡易程式`rd_ncs.py`進行解讀，轉成`csv`檔案，以`excel`進行繪圖。
 
+```python
+$ cat rd_ncs.py
+import netCDF4
+from pandas import *
+import datetime
+
+IX,IY=28-1,29-1
+
+zs=['NWC','JJZ','YZD','FWS']
+
+for z in zs:
+  fname='PM10'+z+'.nc'
+  nc = netCDF4.Dataset(fname, 'r')
+  exec(z+'=nc["PM10"][:,0,IY,IX]')
+  if z==zs[0]:
+    tflag=[datetime.datetime.strptime(str(i),'%Y%j').strftime('%Y%m%d')+'{:02d}'.format(j//10000) for i,j in zip(nc['TFLAG'][:,0,0],nc['TFLAG'][:,0,1])]
+DD={}
+for z in zs+['tflag']:
+  exec('DD.update({"'+z+'":'+z+'})')
+df=DataFrame(DD)
+df.set_index('tflag').to_csv('ntw.csv')
+```
+- note
+  - IX,IY為[VERDI]()畫面上北台灣的位置座標，是FORTRAN自1開始的標籤習慣，與python之標籤習慣從0開始相差1。
 ## Reference
 - 中華人民共和國生態環境部, **空氣品質預報**, [生態環境部官網](http://big5.mee.gov.cn/gate/big5/www.mee.gov.cn/hjzl/dqhj/kqzlyb/)
