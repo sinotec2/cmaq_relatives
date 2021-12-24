@@ -11,7 +11,17 @@
   - 密度單位kg/M<sup>3</sup>
 
 ```bash
+for r in {5..12};do 
+  nc=/nas1/cmaqruns/2018base/data/mcip/1804_run$r/sChina_81ki/METCRO3D_1804_run$r.nc
+  ncks -O -v TFLAG,DENS $nc RHO.1804.nc;
+  brk_day2.cs RHO.1804.nc
+done
+ls 1804
+RHO.20180331.nc  RHO.20180405.nc  RHO.20180410.nc  RHO.20180415.nc  RHO.20180420.nc  RHO.20180425.nc  RHO.20180430.nc  RHO.20211222.nc
+...
+RHO.20180404.nc  RHO.20180409.nc  RHO.20180414.nc  RHO.20180419.nc  RHO.20180424.nc  RHO.20180429.nc  RHO.20211221.nc
 ```
+- Note:`brk_day2.cs`的引數必須以*YYMM*做為主檔名的最後標籤。
 
 ## [grb2D1m3.py](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/grb2D1m3.py)程式說明
 
