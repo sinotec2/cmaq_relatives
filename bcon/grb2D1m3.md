@@ -21,7 +21,7 @@ RHO.20180331.nc  RHO.20180405.nc  RHO.20180410.nc  RHO.20180415.nc  RHO.20180420
 ...
 RHO.20180404.nc  RHO.20180409.nc  RHO.20180414.nc  RHO.20180419.nc  RHO.20180424.nc  RHO.20180429.nc  RHO.20211221.nc
 ```
-- Note:`brk_day2.cs`的引數必須以*YYMM*做為主檔名的最後標籤。
+- Note:[brk_day2.cs](https://sinotec2.github.io/Focus-on-Air-Quality/utilities/netCDF/brk_day/)的引數必須以*YYMM*做為主檔名的最後標籤。
 
 ## [grb2D1m3.py](https://github.com/sinotec2/cmaq_relatives/blob/master/bcon/grb2D1m3.py)程式說明
 
