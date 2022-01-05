@@ -85,6 +85,8 @@ df=read_csv('REAS2CMAQ.csv')
 c_dup=[i for i in set(df.CMAQ) if list(df.CMAQ).count(i)>1]
 REAS2CMAQ={i:j for i,j in zip(df.REAS,df.CMAQ) if i in spec}
 r_dup=[i for i in REAS2CMAQ if REAS2CMAQ[i] in c_dup and i in spec]
+r_mole={i:j for i,j in zip(df.REAS,df.mole)}
+mw={i:j for i,j in zip(df.REAS,df.wt)}
 
 icat=int(sys.argv[2])
 #for icat in range(ncat):
@@ -113,7 +115,7 @@ for v in spec:
     zz[t,:,: ] = griddata(xyc, c[:], (x1, y1), method='linear')
   zz=np.where(np.isnan(zz),0,zz)
   if v in r_dup:
-    nc[vc][:,0,:,:]+=zz[:,:,:]
+    nc[vc][:,0,:,:]+=zz[:,:,:]*r_mole[v]/mw[v]
   else:
-    nc[vc][:,0,:,:] =zz[:,:,:]
+    nc[vc][:,0,:,:] =zz[:,:,:]*r_mole[v]/mw[v]
 nc.close()
