@@ -121,5 +121,5 @@ for icat in range(ncat):
     if vc not in V[3]:continue
     for j in range(nrow):
       for i in range(ncol):
-        nc[vc][:,0,j,i]=np.sum(var[icat,ispec,:,lat_ss[j]:lat_ss[j+1],lon_ss[i]:lon_ss[i+1]],axis=(1,2))*r_mole[v]/mw[v]
+        nc[vc][:,0,j,i]=np.sum(var[icat,ispec,:,lat_ss[j,i]:lat_ss[j+1,i+1],lon_ss[j,i]:lon_ss[j+1,i+1]],axis=(1,2))*r_mole[v]/mw[v]
   nc.close()
