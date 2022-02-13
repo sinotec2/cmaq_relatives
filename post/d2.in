@@ -1,0 +1,50 @@
+KV Method          |OB70
+Minimum Kv         |2.
+Projection         |LCP
+Diag subgrid clouds|.true.
+Start/end date     |16013120 16022923
+MM5 output freq    |60
+Grid time zone     |-8
+CAMx grid size     |65,65,15
+CAMx Dx, Dy        |27.,27.
+CAMx orig & params |-877.500, -877.500, 120.99, 23.61, 10., 40.
+Layer mapping      |-1,0, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 8,10,23
+CAMx lu file       |1602d2.lu  z0d2.avrg
+CAMx 3d file       |1602d2.3d  1602d2.wa
+CAMx 2d file       |1602d2.2d
+CAMx Kv file       |1602d2.kv
+CAMx Cld/rain file |1602d2.cr
+# MM5 files to proc| 30
+MM5 filename       |MMOUT_DOMAIN2_31
+MM5 filename       |MMOUT_DOMAIN2_32
+MM5 filename       |MMOUT_DOMAIN2_33
+MM5 filename       |MMOUT_DOMAIN2_34
+MM5 filename       |MMOUT_DOMAIN2_35
+MM5 filename       |MMOUT_DOMAIN2_36
+MM5 filename       |MMOUT_DOMAIN2_37
+MM5 filename       |MMOUT_DOMAIN2_38
+MM5 filename       |MMOUT_DOMAIN2_39
+MM5 filename       |MMOUT_DOMAIN2_40
+MM5 filename       |MMOUT_DOMAIN2_41
+MM5 filename       |MMOUT_DOMAIN2_42
+MM5 filename       |MMOUT_DOMAIN2_43
+MM5 filename       |MMOUT_DOMAIN2_44
+MM5 filename       |MMOUT_DOMAIN2_45
+MM5 filename       |MMOUT_DOMAIN2_46
+MM5 filename       |MMOUT_DOMAIN2_47
+MM5 filename       |MMOUT_DOMAIN2_48
+MM5 filename       |MMOUT_DOMAIN2_49
+MM5 filename       |MMOUT_DOMAIN2_50
+MM5 filename       |MMOUT_DOMAIN2_51
+MM5 filename       |MMOUT_DOMAIN2_52
+MM5 filename       |MMOUT_DOMAIN2_53
+MM5 filename       |MMOUT_DOMAIN2_54
+MM5 filename       |MMOUT_DOMAIN2_55
+MM5 filename       |MMOUT_DOMAIN2_56
+MM5 filename       |MMOUT_DOMAIN2_57
+MM5 filename       |MMOUT_DOMAIN2_58
+MM5 filename       |MMOUT_DOMAIN2_59
+MM5 filename       |MMOUT_DOMAIN2_60
+MM5 filename       |MMOUT_DOMAIN2_61
+MM5 filename       |
+MM5 filename       |

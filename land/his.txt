@@ -1,0 +1,2185 @@
+from pandas import *
+df=read_csv('pms2001.csv',encoding='big5')
+df
+df.columns
+stn=list(set([i.split('_')[0] for i in df.columns if '_' in i]))
+stn
+stn_m=[i+'_M' for i in stn]
+df[stn_m]
+df_M=DataFrame({'spec':df.spec[:-1]})
+dd_M={'spec':df.spec[:-1]}
+for s in stn_m:
+    dd_M.update({s:list(df[s])[:-1]})
+df_M=DataFrame(dd_M)
+df_M
+dd_M={'spec':df.spec[:-1]}
+for s in stn_m:
+    dd_M.update({s:[float(i.split('(')[0]) for i in list(df[s])[:-3]]})
+df_M=DataFrame(dd_M)
+dd_M={'spec':df.spec[:-3]}
+for s in stn_m:
+    dd_M.update({s:[float(i.split('(')[0]) for i in list(df[s])[:-3]]})
+df_M=DataFrame(dd_M)
+df_M
+sum([float(i) for i in '7   12  6   3   3   0.1 24  0.5'.split()])
+sum([float(i) for i in s.split()])
+s='7    7   4   2   2   0.1 30  0.5'
+sum([float(i) for i in s.split()])
+s='7    8   4   3   1   0.1 29  0.5'
+sum([float(i) for i in s.split()])
+mw=[float(i) for i in '26.98|40.078|55.845|39.0983|24.305|54.938044|28.0855|47.867'.split('|')]
+mw
+sp='26.98|40.078|55.845|39.0983|24.305|54.938044|28.0855|47.867'.split('|')
+sp
+sp='Al|Ca|Fe|K|Mg|Mn|Si|Ti'.split('|')
+sp
+oxn=[3/2,1,3/2,0.5,1,7/2,2,2]
+oxn
+fac=[i+i/m*o*16 for i ,m, o in zip()]
+WesternHDS=[float(i) for i in s.split()]
+LoessArea=[float(i) for i in s.split()]
+s='7    12  6   3   3   0.1 24  0.5'
+WesternHDS=[float(i) for i in s.split()]
+s='7    7   4   2   2   0.1 30  0.5'
+NorthernHDS=[float(i) for i in s.split()]
+LoessArea
+WesternHDS
+NorthernHDS
+L=[i+i/m*o*16 for i ,m, o in zip(LoessArea,mw,oxn)]
+L
+sum(L)
+N=[i+i/m*o*16 for i ,m, o in zip(NorthernHDS,mw,oxn)]
+sum(N)
+W=[i+i/m*o*16 for i ,m, o in zip(WesternHDS,mw,oxn)]
+sum(W)
+df=DataFrame({'spec':sp,'LoessArea':L,'NorthernHDS':N,'WesternHDS':W})
+df
+df.set_index('spec').to_csv('Table3.csv')
+!mv Table3.csv Table3withOxy.csv
+fname='/nas1/cmaqruns/2019base/data/output_CCTM_v53_gcc_1901/CCTM_ACONC_v53_gcc_1909_run9_20190916_TWN_3X3_11E.nc'
+nc = netCDF4.Dataset(fname, 'r')
+import netCDF4
+nc = netCDF4.Dataset(fname, 'r')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+for m in sp:
+    print([i for i in V[3] if 'A'+m in i])
+sp
+sp=[i.upper() for i in sp]
+sp
+for m in sp:
+    print([i for i in V[3] if 'A'+m in i])
+[i for i in V[3] if i[0]=='A' and i[-1]=='I']
+[1+1/m*o*16 for m, o in zip(mw,oxn)]
+sp
+WesternHDS
+24.0/7.0
+NorthernHDS
+30.0/7
+LoessArea
+29/7
+bdate=datetime.datetime(2018,4,8)
+import datetime
+bdate=datetime.datetime(2018,4,8)
+for i in range(9,32):
+    d1=bdate+datetime.timedelta(days=i//8)
+    fname1='RHO.'+d1.strftime('%Y%m%d')+'.nc'    
+    d2=bdate+datetime.timedelta(days=i)
+    fname2='RHO.'+d2.strftime('%Y%m%d')+'.nc'
+    os.system('cp '+fname1+' '+fname2)
+    nc=netCDF4.Dataset(fname2, 'r+')
+    nc.SDATE=int(d2.strftime('%Y%j'))
+    for t in range(24):
+        nc['TFLAG'][t,:,0]=nc.SDATE
+    nc['TFLAG'][24,:,0]=nc.SDATE+1
+    nc.close()
+import os
+for i in range(9,32):
+    d1=bdate+datetime.timedelta(days=i//8)
+    fname1='RHO.'+d1.strftime('%Y%m%d')+'.nc'    
+    d2=bdate+datetime.timedelta(days=i)
+    fname2='RHO.'+d2.strftime('%Y%m%d')+'.nc'
+    os.system('cp '+fname1+' '+fname2)
+    nc=netCDF4.Dataset(fname2, 'r+')
+    nc.SDATE=int(d2.strftime('%Y%j'))
+    for t in range(24):
+        nc['TFLAG'][t,:,0]=nc.SDATE
+    nc['TFLAG'][24,:,0]=nc.SDATE+1
+    nc.close()
+i
+9//8
+d1
+for i in range(8,32):
+    d1=bdate+datetime.timedelta(days=i//8)
+    fname1='RHO.'+d1.strftime('%Y%m%d')+'.nc'    
+    d2=bdate+datetime.timedelta(days=i)
+    fname2='RHO.'+d2.strftime('%Y%m%d')+'.nc'
+    os.system('cp '+fname1+' '+fname2)
+    nc=netCDF4.Dataset(fname2, 'r+')
+    nc.SDATE=int(d2.strftime('%Y%j'))
+    for t in range(24):
+        nc['TFLAG'][t,:,0]=nc.SDATE
+    nc['TFLAG'][24,:,0]=nc.SDATE+1
+    nc.close()
+bdate
+bdate=datetime.datetime(2018,3,31)
+for i in range(8,32):
+    d1=bdate+datetime.timedelta(days=i//8)
+    fname1='RHO.'+d1.strftime('%Y%m%d')+'.nc'    
+    d2=bdate+datetime.timedelta(days=i)
+    fname2='RHO.'+d2.strftime('%Y%m%d')+'.nc'
+    os.system('cp '+fname1+' '+fname2)
+    nc=netCDF4.Dataset(fname2, 'r+')
+    nc.SDATE=int(d2.strftime('%Y%j'))
+    for t in range(24):
+        nc['TFLAG'][t,:,0]=nc.SDATE
+    nc['TFLAG'][24,:,0]=nc.SDATE+1
+    nc.close()
+pwd
+cd /nas1/cmaqruns/2018base/data/mcip/RHO/sChina_81k/1804
+for i in range(8,32):
+    d1=bdate+datetime.timedelta(days=i//8)
+    fname1='RHO.'+d1.strftime('%Y%m%d')+'.nc'    
+    d2=bdate+datetime.timedelta(days=i)
+    fname2='RHO.'+d2.strftime('%Y%m%d')+'.nc'
+    os.system('cp '+fname1+' '+fname2)
+    nc=netCDF4.Dataset(fname2, 'r+')
+    nc.SDATE=int(d2.strftime('%Y%j'))
+    for t in range(24):
+        nc['TFLAG'][t,:,0]=nc.SDATE
+    nc['TFLAG'][24,:,0]=nc.SDATE+1
+    nc.close()
+cd /nas1/ecmwf/reanalysis/gribs18
+run grb2m3.py 1804.nc D1
+naly1
+nlay1
+ l40=['21', '21', '22', '22', '23', '24', '24', '25', '25', '26', '27', '28', '28', '29', '30', '31', '32', '32', '33', '34',
+     '35', '36', '37', '38', '39', '40', '42', '43', '44', '46', '47', '48', '49', '50', '51', '53', '54', '56', '57', '59']
+d40_23={39-k:l34.index(l40[k]) for k in range(40)}
+d40_23
+ l40=['21', '21', '22', '22', '23', '24', '24', '25', '25', '26', '27', '28', '28', '29', '30', '31', '32', '32', '33', '34',
+     '35', '36', '37', '38', '39', '40', '42', '43', '44', '46', '47', '48', '49', '50', '51', '53', '54', '56', '57', '59']
+d40_23={k:l34.index(l40[k]) for k in range(40)}
+l34=['21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37',
+     '38', '39', '40', '42', '43', '44', '46', '47', '48', '49', '50', '51', '53', '54', '56', '57', '59']
+ l40=['21', '21', '22', '22', '23', '24', '24', '25', '25', '26', '27', '28', '28', '29', '30', '31', '32', '32', '33', '34',
+     '35', '36', '37', '38', '39', '40', '42', '43', '44', '46', '47', '48', '49', '50', '51', '53', '54', '56', '57', '59']
+d40_23={39-k:l34.index(l40[k]) for k in range(40)}
+d40_23
+ l40=['21', '21', '22', '22', '23', '24', '24', '25', '25', '26', '27', '28', '28', '29', '30', '31', '32', '32', '33', '34',
+     '35', '36', '37', '38', '39', '40', '42', '43', '44', '46', '47', '48', '49', '50', '51', '53', '54', '56', '57', '59']
+d40_23={k:l34.index(l40[k]) for k in range(40)}
+d40_23
+import netCDF4
+import numpy as np
+import datetime
+from scipy.interpolate import griddata
+import json
+
+from pyproj import Proj
+import sys,os,subprocess
+from dtconvertor import dt2jul, jul2dt
+for v in ['mws','dic','nms_gas','nms_part']:
+  with open(v+'.json', 'r') as jsonfile:
+    exec(v+'=json.load(jsonfile)')
+uts=['PPM',"ug m-3          "]
+l34=['21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37',
+     '38', '39', '40', '42', '43', '44', '46', '47', '48', '49', '50', '51', '53', '54', '56', '57', '59']
+l40=['21', '21', '22', '22', '23', '24', '24', '25', '25', '26', '27', '28', '28', '29', '30', '31', '32', '32', '33', '34',
+     '35', '36', '37', '38', '39', '40', '42', '43', '44', '46', '47', '48', '49', '50', '51', '53', '54', '56', '57', '59']
+d40_34={k:l34.index(l40[k]) for k in range(40)}
+byr=subprocess.check_output('pwd',shell=True).decode('utf8').strip('\n')[-2:]
+#read a BC file as rate base
+fname='/nas1/cmaqruns/2019base/data/bcon/BCON_v53_1912_run5_regrid_20191201_TWN_3X3'
+nc = netCDF4.Dataset(fname,'r')
+Vb=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+rate={}
+for v in nms_part:
+  nms=nms_part[v]
+  for nm in nms:
+    if nm not in Vb[2]:sys.exit(v+' not in BCON file')
+  avg=[np.mean(nc.variables[nm][:]) for nm in nms]
+  sum_avg=sum(avg)
+  if sum_avg==0:sys.exit('sum_avg==0')
+  ratev=[avg[i]/sum_avg for i in range(len(avg))]
+  rate.update({v:ratev})
+for v in nms_gas:
+  rate.update({v:[1.]})
+nms
+'APOCI' in rate
+rate
+fname='1804.nc'
+nc = netCDF4.Dataset(fname,'r')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+#read the timestamp in nc and store at /expand the nc1
+SDATE=[datetime.datetime.strptime(''.join([str(i, encoding='utf-8') for i in list(nc.variables[V[1][0]][t, :])]),\
+ '%m/%d/%Y (%H:%M)') for t in range(nt)]
+bdate,edate=SDATE[0],SDATE[-1]
+delt=edate-bdate
+ntA=int(delt.total_seconds()/3600.)
+JuliHr=[int((bdate+datetime.timedelta(hours=t)).strftime("%Y%j%H")) for t in range(ntA)]
+N='D0''
+N='D0'
+tmps={'D'+i:'templateD'+i+'.ncV49K34' for i in '012'}
+path='./'
+fnameO=fname.replace('.nc',N+'.m3.nc')
+if not os.path.exists(fnameO):os.system('cp '+path+tmps[N]+' '+fnameO)
+nc1= netCDF4.Dataset(fnameO,'r+')
+V1=[list(filter(lambda x:nc1.variables[x].ndim==j, [i for i in nc1.variables])) for j in [1,2,3,4]]
+nv1=len(V1[3])
+nt1,nlay1,nrow1,ncol1=nc1.variables[V1[3][0]].shape
+ nt1<ntA
+  for t in range(ntA):
+    nc1.variables['TFLAG'][t,0,0]=0
+N='D1'
+tmps={'D'+i:'templateD'+i+'.ncV49K34' for i in '012'}
+path='./'
+fnameO=fname.replace('.nc',N+'.m3.nc')
+if not os.path.exists(fnameO):os.system('cp '+path+tmps[N]+' '+fnameO)
+nc1= netCDF4.Dataset(fnameO,'r+')
+V1=[list(filter(lambda x:nc1.variables[x].ndim==j, [i for i in nc1.variables])) for j in [1,2,3,4]]
+nv1=len(V1[3])
+nt1,nlay1,nrow1,ncol1=nc1.variables[V1[3][0]].shape
+ntA
+edate
+SDATE
+len(SDATE)
+nc = netCDF4.Dataset(fname,'r')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+#read the timestamp in nc and store at /expand the nc1
+SDATE=[datetime.datetime.strptime(''.join([str(i, encoding='utf-8') for i in list(nc.variables[V[1][0]][t, :])]),\
+ '%m/%d/%Y (%H:%M)') for t in range(nt)]
+bdate,edate=SDATE[0],SDATE[-1]
+delt=edate-bdate
+ntA=int(delt.total_seconds()/3600.)
+JuliHr=[int((bdate+datetime.timedelta(hours=t)).strftime("%Y%j%H")) for t in range(ntA)]
+fname
+len(SDATE)
+nt1<ntA
+  for t in range(ntA):
+    nc1.variables['TFLAG'][t,0,0]=0
+nc1.SDATE=JuliHr[0]//100
+nc1.STIME=JuliHr[0]%100*10000
+var=np.zeros(shape=(ntA,nc1.NVARS,2))
+var[:,:,0]=np.array([i//100 for i in JuliHr])[:,None]
+var[:,:,1]=np.array([i%100  for i in JuliHr])[:,None]*10000
+nc1.variables['TFLAG'][:,:,:]=var[:,:,:]
+Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,
+        lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+
+xlon, xlat = nc.variables['lon_0'][:].flatten(), np.flip(nc.variables['lat_0'][:].flatten())
+lonm, latm = np.meshgrid(xlon, xlat)
+x,y=pnyc(lonm,latm, inverse=False)
+
+#interpolation indexing
+x1d=[nc1.XORIG+nc1.XCELL*i for i in range(ncol1)]
+y1d=[nc1.YORIG+nc1.YCELL*i for i in range(nrow1)]
+x1,y1=np.meshgrid(x1d, y1d)
+maxx,maxy=x1[-1,-1],y1[-1,-1]
+minx,miny=x1[0,0],y1[0,0]
+boo=(abs(x) <= (maxx - minx) /2+nc1.XCELL*10) & (abs(y) <= (maxy - miny) /2+nc1.YCELL*10)
+idx = np.where(boo)
+mp=len(idx[0])
+xyc= [(x[idx[0][i],idx[1][i]],y[idx[0][i],idx[1][i]]) for i in range(mp)]
+
+print('read the density of air')
+dlay=np.array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
+       17, 18, 19, 20, 21, 23, 24, 25, 26, 28, 29, 30, 32, 34, 35, 37, 39])
+dens=np.zeros(shape=(ntA,40, nrow1, ncol1))
+caldat=list(set([int((bdate+datetime.timedelta(hours=t)).strftime("%Y%m%d")) for t in range(ntA)]))
+caldat.sort()
+for c in caldat:
+  iday=caldat.index(c)
+  fname='/nas1/cmaqruns/20'+byr+'base/data/mcip/RHO/RHO.'+str(c)+'.nc'
+  ncr = netCDF4.Dataset(fname,'r')
+  ntr=min(24,ncr.dimensions['TSTEP'].size)
+  t1=iday*24
+  t2=min(ntA,t1+min(24,ntr))
+  hrs=t2-t1
+  dens[t1:t2,:,:,:]=ncr.variables['DENS'][:hrs,:,:,:] *1E9 #(kg to microgram)
+dens2=np.zeros(shape=(ntA,nlay1, nrow1, ncol1))
+if nlay1==40:
+  dens2[:]=dens[:]
+  dd=d40_34
+else:
+  for k in range(nlay1):
+    dens2[:,k,:,:]=dens[:,dlay[k],:,:]
+  dd=[k for k in range(nlay1)]
+var=np.zeros(shape=(nt, nlay, nrow, ncol))
+zz=np.zeros(shape=(nt, nlay1, nrow1, ncol1))
+var2=np.zeros(shape=(ntA,nlay1, nrow1, ncol1))
+v="VAR_192_210_7_P0_L105_GLL0"
+  var[:,:,:,:]=np.flip(nc.variables[v][:,:,:,:], [1,2])
+  for t in range(nt):
+    c = np.array([var[t,:,idx[0][i], idx[1][i]] for i in range(mp)])
+    for k in range(nlay1):
+      zz[t,k,:,: ] = griddata(xyc, c[:,dd[k]], (x1, y1), method='linear')
+t
+nt
+  for t in range(0,ntA,3):
+    t3=int(t/3)
+    var2[t+0,:,:,:]=zz[t3,:,:,:]
+    var2[t+1,:,:,:]=zz[t3,:,:,:]*2/3+zz[t3+1,:,:,:]*1/3
+    var2[t+2,:,:,:]=zz[t3,:,:,:]*1/3+zz[t3+1,:,:,:]*2/3
+v in nms_gas
+    nms=nms_part[v]
+nms
+nm='APOCI'
+rate[v][nms.index(nm)]
+    for nm in nms:
+      nc1.variables[nm][:]+=var2[:] * rate[v][nms.index(nm)] * dens2[:]
+bn
+nm
+nm in nc1
+nm in nc1[:]
+nm in V1[3]
+len(V1[3])
+ls
+ls temp*
+fname='templateD2.ncV49K34'
+nc = netCDF4.Dataset(fname, 'r')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+a=set(V1[3])-set(V[3])
+len(a)
+a=list(set(V1[3])-set(V[3]))
+a.sort()
+a[:5]
+a
+s=''
+for i in a:
+    s+=i+','
+s
+a=list(set(V[3])-set(V1[3]))
+a
+len(V[3])
+s=''
+for i in V[3]:
+    s+='{:16s}'.format(i)
+s
+fname
+fname='templateD1.ncV49K34'
+run grb2m3.py 1804.nc D1
+run grb2m3.py 1804.nc D1
+ nc1.variables['TFLAG'].shape
+var.shape
+run grb2m3.py 1804.nc D1
+for v in ['mws','dic','nms_gas','nms_part']:
+  with open(v+'.json', 'r') as jsonfile:
+    exec(v+'=json.load(jsonfile)')
+s=set()
+for i in nms_part.values():
+    s+=set(i)
+for i in nms_part.values():
+    s|=set(i)
+len(s)
+s
+for i in set(nms_part.values())|set(nms_gas.values()):
+    s|=set(i)
+set(nms_part.values())
+list(nms_part.values())
+for i in nms_part.values()+nms_gas.values():
+    s|=set(i)
+for i in nms_gas.values():
+    s|=set(i)
+len(s)
+s
+s=set()
+for i in nms_part.values():
+    s|=set(i)
+for i in nms_gas.values():
+    s|=set(i)
+len(s)
+s
+nms_gas.values()
+s=set()
+for i in nms_part.values():
+    s|=set(i)
+for i in nms_gas.values():
+    s|=i
+for i in nms_gas.values():
+    s|=set([i])
+s
+len(s)
+pwd
+fname='templatesChina_81kV49.nc'
+nc = netCDF4.Dataset(fname, 'r')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+len(V[3])
+set(V[3])-set(V1[3])
+set(V1[3])-set(V[3])
+len(V1[3])
+fname='templateD2V49K34.nc'
+nc = netCDF4.Dataset(fname, 'r')
+fname='templateD2_V49K34.nc'
+nc = netCDF4.Dataset(fname, 'r')
+fname='templateD2.ncV49K1'
+nc = netCDF4.Dataset(fname, 'r')
+V1=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+len(V1[3])
+set(V1[3])-set(V[3])
+nc.close()
+nc1.close()
+run grb2m3.py 1804.nc D1
+run grb2m3.py 1804.nc D1
+pwd
+!lst
+fname='1804D1.m3.nc'
+nc = netCDF4.Dataset(fname, 'r')
+nc = netCDF4.Dataset(fname, 'r+')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+for v in ['APOCJ','APNCOMJ']:
+    nc[v][:]=1.E-7
+[i for i in V[3] if i[:2]='AP']
+[i for i in V[3] if i[:2]=='AP']
+for v in ['APOCJ','APNCOMI','APOCI']:
+    nc[v][:]=1.E-7
+nc.close()
+fname='/nas1/cmaqruns/2018base/data/bcon/BC_from_EAC4/BCON_v53_1804_run5_regrid_20180331_EAsia_81K'
+nc = netCDF4.Dataset(fname, 'r')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+[len(i) for i in V]
+var=np.zeros(shape=nc[V[2][0]].shape)
+for iv in range(51):
+    var[iv,:,:,:]=nc[V[2][iv]][:,:,:]
+var.shape
+var=np.zeros(shape=[51]+nc[V[2][0]].shape)
+var=np.zeros(shape=[51]+list(nc[V[2][0]].shape))
+var.shape
+for iv in range(51):
+    var[iv,:,:,:]=nc[V[2][iv]][:,:,:]
+nc[V[2][iv]].shape
+nt,nlay,nbnd=nc[V[2][iv]].shape
+var=np.zeros(shape=(51,nt,nlay,nbnd))
+for iv in range(51):
+    var[iv,:,:,:]=nc[V[2][iv]][:,:,:]
+var.shape
+for iv in range(51):
+    v=V[2][iv]
+    if v=='TFLAG':continue
+    var[iv,:,:,:]=nc[V[2][iv]][:,:,:]
+V0=V[2][:]
+ls
+cd /home/cmaqruns/2018base/data/bcon
+ls
+fname='BCON_v53_1804_run5_regrid_20180331_EAsia_81K'
+nc = netCDF4.Dataset(fname, 'r+')
+for iv in range(51):
+    v=V0[iv]
+    if v=='TFLAG':continue
+    nc[v][:,:,:]=var[iv,:,:,:]
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+for iv in range(51):
+    v=V0[iv]
+    if v=='TFLAG':continue
+    if v not in V[2]:continue
+    nc[v][:,:,:]=var[iv,:,:,:]
+nc.close()
+fname='/nas1/cmaqruns/2018base/data/bcon/BC_from_EAC4/BCON_v53_1804_run6_regrid_20180331_EAsia_81K'
+nc = netCDF4.Dataset(fname, 'r')
+fname='/nas1/cmaqruns/2018base/data/bcon/BC_from_EAC4/BCON_v53_1804_run6_regrid_20180404_EAsia_81K'
+nc = netCDF4.Dataset(fname, 'r')
+for iv in range(51):
+    v=V0[iv]
+    if v=='TFLAG':continue
+    var[iv,:,:,:]=nc[v][:,:,:]
+fname='BCON_v53_1804_run6_regrid_20180404_EAsia_81K'
+nc = netCDF4.Dataset(fname, 'r+')
+for iv in range(51):
+    v=V0[iv]
+    if v=='TFLAG':continue
+    if v not in V[2]:continue
+    nc[v][:,:,:]=var[iv,:,:,:]
+nc.close()
+hidyoty
+history
+cd /nas1/ecmwf/reanalysis/gribs18
+fname='a'
+nc = netCDF4.Dataset(fname, 'r+')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+nt,nlay,nrow,ncol
+var=np.zeros(shape=(nt,nlay,nrow,ncol))
+var[:]=nc[V[3][0]][:]
+idx=np.where(np.isnan(var))
+len(idx[0])
+[len(i) for i in idx]
+np.max(var)
+a=np.max(var)
+idx=np.where(var==a)
+[len(i) for i in idx]
+len(var.flatten())
+b=np.where(var==a,0,var)
+np.max(b)
+nc[V[3][0]][:]=b[:]
+nc.close()
+!top
+cd /nas1/ecmwf/reanalysis/gribs18/POST
+ls
+fname='1804D1.m3.nc'
+nc = netCDF4.Dataset(fname, 'r')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+nc0 = netCDF4.Dataset(fname, 'r')
+V0=[list(filter(lambda x:nc0[x].ndim==j, [i for i in nc0])) for j in [1,2,3,4]]
+nc0 = netCDF4.Dataset(fname, 'r')
+V0=[list(filter(lambda x:nc0[x].ndim==j, [i for i in nc0.variables])) for j in [1,2,3,4]]
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+nt0,nlay0,nrow0,ncol0=(nc0[V0[3][0]].shape[i] for i in range(4))
+from dtconvertor import dt2jul, jul2dt
+sdatetime=[jul2dt(nc0['TFLAG'][t,0,:]) for t in range(nt0)]
+sdate=list(set([i.strftime("%Y%m%d") for i in sdatetime]))
+sdate.sort()
+sdate
+fnameT='CCTM_ACONC_v53_gcc_1804_run5_YMD_EAsia_81K_11.nc'
+ymd=sdate[0]
+fnameT.replace('YMD',ymd)
+ os.path.exists(fnameT.replace('YMD',ymd))
+sdates=[i for i in sdatetime if i.hours==0]
+sdates=[i for i in sdatetime if i.hour==0]
+sdates
+tmd
+ymd
+sdatec=[i.strftime("%Y%m%d") for i in sdates]
+sdatetime.index(sdates[sdatec.index(ymd)])
+ymd='20180401'
+sdatetime.index(sdates[sdatec.index(ymd)])
+v
+  nc = netCDF4.Dataset(fname, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+  rs,cs=(nrow0-nrow)/2,(ncol0-ncol)/2
+  t0=sdatetime.index(sdates[sdatec.index(ymd)])
+    nc[v][:,:,:,:]=nc0[t0:t0+nt,:,rs:rs+nrow,cs:cs+ncol]
+nc0 = netCDF4.Dataset(fname, 'r')
+V0=[list(filter(lambda x:nc0[x].ndim==j, [i for i in nc0.variables])) for j in [1,2,3,4]]
+nt0,nlay0,nrow0,ncol0=(nc0[V0[3][0]].shape[i] for i in range(4))
+rs,cs
+fname
+fnameT='CCTM_ACONC_v53_gcc_1804_run5_YMD_EAsia_81K_11.nc'
+fname=fnameT.replace('YMD',ymd)
+  nc = netCDF4.Dataset(fname, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+  rs,cs=(nrow0-nrow)/2,(ncol0-ncol)/2
+  t0=sdatetime.index(sdates[sdatec.index(ymd)])
+rs,cs
+  rs,cs=(nrow0-nrow)//2,(ncol0-ncol)//2
+rs,cs
+    nc[v][:,:,:,:]=nc0[t0:t0+nt,:,rs:rs+nrow,cs:cs+ncol]
+    nc[v][:,:,:,:]=nc0[v][t0:t0+nt,:,rs:rs+nrow,cs:cs+ncol]
+run fil_aconc.py
+run fil_aconc.py
+run fil_aconc.py
+cd /nas1/cmaqruns/2018base/data/land
+import libtiff
+!pip install libtiff
+import libtiff
+fname='HarvestedAreaYield175Crops_Geotiff/HarvestedAreaYield175Crops_Geotiff/yautia_HarvAreaYield_Geotiff/yautia_Production.tif'
+from libtiff import TIFF
+tif = TIFF.open('fname')
+fname='HarvestedAreaYield175Crops_Geotiff/HarvestedAreaYield175Crops_Geotiff/yautia_HarvAreaYield_Geotiff/yautia_Production.tif'
+from libtiff import TIFF
+tif = TIFF.open(fname)
+tif.info()
+tif.info().ImageWidth
+tif.info.ImageWidth
+tif.info('ImageWidth')
+info=tif.info().split('\n')
+len(info)
+info
+infoD={i.split()[0]:i.split()[1] for i in info}
+infoD['ImageWidth']
+infoD={i.split(': ')[0]:i.split()[1] for i in info}
+infoD['ImageWidth']
+ls -r *tif>fnames.txt
+pwd
+lsd
+!lsd
+!lsr "*tif" >fnames.txt
+!head fnames.txt
+!lsf "*tif" >fnames.txt
+!head fnames.txt
+!lsf "*tif"|awkk 9 >fnames.txt
+!head fnames.txt
+!wc fnames.txt
+with open('fnames.txt','r') as f:
+  d=[i.strip('\n').split('/')[-1] for i in f]
+spec=[i.split('_')[0] for i in d]
+spec=set([i.split('_')[0] for i in d])
+len(spec)
+len(d)
+set([len([i for i in d if i.split('_')==j]) for j in spec])
+s=set()
+for i in spec:
+    s|=set(len([j for j in d if i in j]))
+i
+j
+s
+for i in spec:
+    s|=set([len([j for j in d if i in j])])
+len(s)
+s
+i6=[]
+for i in spec:
+    if len([j for j in d if i in j])==6:i6.append(i)
+i6[:5]
+i='popcorn'
+[j for j in d if i in j]
+i12=[]
+i12=[]
+for i in spec:
+    if len([j for j in d if i in j])==12:i12.append(i)
+i12[:5]
+i='chestnut'
+[j for j in d if i in j]
+!findc chestnut_Production.tif
+!lsr chestnut_Production.tif
+!tiffinfo ./HarvestedAreaYield175Crops_Geotiff/GeoTiff/chestnut/chestnut_Production.tif
+tiffinfo ./HarvestedAreaYield175Crops_Geotiff/HarvestedAreaYield175Crops_Geotiff/chestnut_HarvAreaYield_Geotiff/chestnut_Production.tif
+!tiffinfo ./HarvestedAreaYield175Crops_Geotiff/HarvestedAreaYield175Crops_Geotiff/chestnut_HarvAreaYield_Geotiff/chestnut_Production.tif
+!tiffinfo ./HarvestedAreaYield175Crops_Geotiff/HarvestedAreaYield175Crops_Geotiff/chestnut_HarvAreaYield_Geotiff/chestnut_Production.tif >b
+!tiffinfo ./HarvestedAreaYield175Crops_Geotiff/HarvestedAreaYield175Crops_Geotiff/chestnut_HarvAreaYield_Geotiff/chestnut_Production.tif >&b
+!tiffinfo ./HarvestedAreaYield175Crops_Geotiff/GeoTiff/chestnut/chestnut_Production.tif >&a
+!diff a b
+s
+i24=[]
+for i in spec:
+    if len([j for j in d if i in j])==24:i24.append(i)
+i24[:5]
+i24[-5:]
+i='grape'
+[j for j in d if i in j]
+s=set()
+for i in spec:
+    s|=set([len([j for j in d if i+'_' in j])])
+s
+i12=[]
+for i in spec:
+    if len([j for j in d if i+'_' in j])==12:i12.append(i)
+i12[:5]
+i='chestnut'
+[j for j in d if i+'_' in j]
+*
+175*6
+pwd
+ls
+fname='beld4.EAsia_81K.ncf'
+nc = netCDF4.Dataset(fname, 'r')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+v3=[i.lowwer() for i in V[3]]
+v3=[i.lower() for i in V[3]]
+v3[:5]
+set(v3)-set(spec)
+type(spec)
+len(set(v3)-spec)
+len(v3)
+len(spec)
+v3=[i for i in v3 if 'modis' not in v3]
+len(v3)
+[i for i in v3 if 'modis' in v3]
+[i for i in v3 if 'usgs' in v3]
+ls
+v3[:5]
+v3=list(set([i.replace('_ir') for i in v3]))
+v3=list(set([i.replace('_ir','') for i in v3]))
+len(v3)
+v3.sort()
+v3[:5]
+spec[:5]
+spec=list(spec)
+spec.sort()
+spec[:5]
+set(v3)-set(spec)
+len(set(v3)-set(spec))
+[i for i in spec if 'potatoe' in i]
+[i for i in spec if 'pota' in i]
+[i for i in spec if 'spru' in i]
+!df -h
+s='        float L1_Bulk_D(TSTEP, LAY, ROW, COL) ;        float L1_Cation(TSTEP, LAY, ROW, COL) ;        float L1_Field_C(TSTEP, LAY, ROW, COL) ;        float L1_PH(TSTEP, LAY, ROW, COL) ;        float L1_Porosity(TSTEP, LAY, ROW, COL) ;        float L1_SoilNum(TSTEP, LAY, ROW, COL) ;        float L1_Wilt_P(TSTEP, LAY, ROW, COL) ;        float L2_Bulk_D(TSTEP, LAY, ROW, COL) ;        float L2_Cation(TSTEP, LAY, ROW, COL) ;        float L2_Field_C(TSTEP, LAY, ROW, COL) ;        float L2_PH(TSTEP, LAY, ROW, COL) ;        float L2_Porosity(TSTEP, LAY, ROW, COL) ;        float L2_Wilt_P(TSTEP, LAY, ROW, COL) ;'
+s=s.split(';')
+s=[i.replace('float','').replace('(TSTEP, LAY, ROW, COL)','') for i in s]
+s
+s=[i.replace(' ','') for i in s]
+s
+s.sort()
+s
+set([i[4:] for i in s])
+set([i[3:] for i in s])
+s=s[1:]
+set([i[3:] for i in s])
+len(s)
+a=[i[3:] for i in s]
+a.sort()
+a
+df=read_csv('/nas1/cmaqruns/2016base/data/land/most_freq.L1_SoilNum.csv')
+df.head()
+np.min(df.L1_SoilNum>0)
+np.min([i for i in df.L1_SoilNum if i>0])
+np.max([i for i in df.L1_SoilNum if i>0])
+fname
+ls
+pwd
+cd /nas1/cmaqruns/2016base/data/land
+ls
+pwd
+cd ../../2016base
+cd ../../../2016base
+cd data/land
+fname='epic_festc1.4_20180516/2016_US1_soil_bench.nc'
+nc = netCDF4.Dataset(fname, 'r')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+for v in V[3]:
+    a=nc[v][:]
+    print(v,np.max(a),np.min(a))
+for v in V[3]:
+    a=nc[v][:]>0
+    print(v,np.max(a),np.min(a))
+for v in V[3]:
+    a=[i for i in nc[v][:].flatten() if i>0]
+    print(v,np.max(a),np.min(a))
+!vi aaa
+with open('aaa','r') as f:
+  d=[i.strip('\n') for i in f]
+d
+with open('aaa','r') as f:
+  d=[i.strip('\n').split(',')[0] for i in f]
+d[:5]
+d=[i for i in d if '_ir' not in i]
+d
+d=[i for i in d if len(i)>0]
+d=[i.replace("'",'').replace(' ','') for i in d]
+d
+spec
+d=[i.lower() for i in d]
+set(d)-set(spec)
+[for i in spec if 'pea' in i]
+[i for i in spec if 'pea' in i]
+'goober' in spec
+[i for i in spec if 'nut' in i]
+[i for i in spec if 'grass' in i]
+[i for i in spec if 'str' in i]
+set(d)-set(spec)
+[i for i in spec if 'bean' in i]
+[i for i in spec if 'col' in i]
+[i for i in spec if 'rape' in i]
+[i for i in spec if 'corn' in i]
+[i for i in d if 'corn' in i]
+[i for i in d if 'pota' in i]
+[i for i in spec if 'pota' in i]
+[i for i in spec if 'sorgh' in i]
+[i for i in spec if 'wheat' in i]
+[i for i in spec if 'grass' in i]
+[i for i in spec if 'ha' in i]
+[i for i in spec if 'str' in i]
+[i for i in spec if 'fod' in i]
+[i for i in spec if 'for' in i]
+[i for i in d if 'gras' in i]
+[i for i in d if 'crop' in i]
+[i for i in spec if 'crop' in i]
+[i for i in spec if 'oth' in i]
+pwd
+lsd
+cd ../../../2018base/data/land
+!lsd
+cd HarvestedAreaYield175Crops_Geotiff/
+ls
+cd HarvestedAreaYield175Crops_Geotiff/
+hs
+ls
+[i for i in d if 'oat' in i]
+[i for i in spec if 'oat' in i]
+[i for i in spec if 'mill' in i]
+[i for i in d if 'millet' in i]
+!vi aaa
+pwd
+d21_175={}
+with open('aaa','r') as f:
+  for i in f:
+    ss=i.split('|')      
+    d21_175.update({ss[1]:ss[2]})
+d21_175
+d21_175.update({j:j for j in [i for i in d if i in spec]})
+d21_175
+len(d21_175)
+d21_175.update({'beansedible':['broadbean', 'greenbean', 'greenbroadbean', 'stringbean']})
+d21_175.update({i:'wheat' for i in ['broadbean', 'wheat_winter']})
+len(d21_175)
+fnameO='d21_175.json'
+with open(fnameO,'w', newline='') as jsonfile:
+    json.dump(d21_175, jsonfile)
+d21_175
+!vi d21_175.json
+cd /nas1/cmaqruns/2016base/data/land/epic_festc1.4_20180516
+fname='2016_US1_soil_bench.nc2'
+nc = netCDF4.Dataset(fname, 'r')
+v='SoilNum'
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+nt,nlay,nrow,ncol
+nc[v][:,:,33,33]
+V
+v='L1_SoilNum'
+nc[v][:,:,33,33]
+v='L2_PH'
+nc[v][:,:,33,33]
+cd /nas1/cmaqruns/2018base/data/land/InternationlWaterManagementInstitute
+ls
+history
+ls
+fname='giam_28_classes_global.tif'
+tif = TIFF.open(fname,mode='r')
+image = tif.read_image()
+!pip install rasterio
+import rasterio
+img = rasterio.open(fname)
+nx,ny=img.width,img.height
+nx,ny
+img.crs
+dir(img)
+dir(img) >& a
+dir(img)|more
+dir(img)
+a=dir(img)
+a[:5]
+a[5:25]
+a[25:45]
+a[45:75]
+a[75:105]
+dd=img.read()
+dd.shape
+dd[0,:5,:5]
+img.count
+s=set(dd.flatten())
+len(s)
+ls
+s
+nx,ny,nz=img.width,img.height,img.count
+nx,ny,nz
+data.shape
+dd.shape
+ls
+cat giam_28_classes_global.tfw
+from pyproj import Proj
+Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+Xcent, Ycent = twd97.fromwgs84(Latitude_Pole, Longitude_Pole)
+pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+import twd97
+from pyproj import Proj
+Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+Xcent, Ycent = twd97.fromwgs84(Latitude_Pole, Longitude_Pole)
+pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+fname='temp.nc'
+nc = netCDF4.Dataset(fname, 'r+')
+40008/nx
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+var=np.zeros(shape=(29,nrow,ncol))
+lat_1d=[90-(180./(ny-1))*i for i in range(ny)]
+lon_1d=[-180+(360./(nx-1))*i for i in range(nx)]
+lonm, latm = np.meshgrid(lon_1d, lat_1d)
+lonm.shape
+lonm[:5,:5]
+x,y=pnyc(lonm,latm, inverse=False)
+np.searchsorted(lonm,60)
+np.searchsorted(lon_1d,60)
+i=np.searchsorted(lon_1d,60)
+lon_1d[i,i+1]
+lon_1d[i],lon_1d[i+1]
+i=np.searchsorted(lon_1d,60)-1
+lon_1d[i],lon_1d[i+1]
+j=np.searchsorted(lat_1d,-10)-1
+lat_1d[j],lat_1d[j+1]
+j
+lat=lat_1d.sort()
+j=np.searchsorted(lat,-10)-1
+lat=lat_1d[:]
+lat.sort()
+j=np.searchsorted(lat,-10)-1
+j
+ny
+jj=ny-j
+lat_1d[jj],lat_1d[jj+1]
+jj
+jj=jj+1
+lat_1d[jj],lat_1d[jj+1]
+jj=jj-2
+lat_1d[jj],lat_1d[jj+1]
+jj=jj-1
+lat_1d[jj],lat_1d[jj+1]
+lat_1d=[90-(180./(ny-1))*i for i in range(ny)]
+lat_1d[jj],lat_1d[jj+1]
+lat=lat_1d[:]
+lat.sort()
+j=np.searchsorted(lat,-10)-1
+jj=ny-j
+lat_1d[jj],lat_1d[jj+1]
+jj=jj-1
+lat_1d[jj],lat_1d[jj+1]
+jj=jj-1
+lat_1d[jj],lat_1d[jj+1]
+jj
+j=np.searchsorted(lat,50)-1
+j2=ny-j
+lat_1d[j2],lat_1d[j2+1]
+j2=j2-1
+lat_1d[j2],lat_1d[j2+1]
+j2=j2-1
+lat_1d[j2],lat_1d[j2+1]
+j2
+dd.shape
+i
+data=dd[0,26952:,4479+1:11199+1]
+data.shape
+data=dd[0,4479+1:11199+1,26952:]
+data.shape
+lon_1d=lon_1d[26952:]
+lat_1d=lat_1d[4479+1:11199+1]
+lonm, latm = np.meshgrid(lon_1d, lat_1d)
+x,y=pnyc(lonm,latm, inverse=False)
+nc1=nc
+V1=[list(filter(lambda x:nc1.variables[x].ndim==j, [i for i in nc1.variables])) for j in [1,2,3,4]]
+nt1,nlay1,nrow1,ncol1=nc1.variables[V1[3][0]].shape
+x1d=[nc1.XORIG+nc1.XCELL*i for i in range(ncol1)]
+y1d=[nc1.YORIG+nc1.YCELL*i for i in range(nrow1)]
+x1,y1=np.meshgrid(x1d, y1d)
+maxx,maxy=x1[-1,-1],y1[-1,-1]
+minx,miny=x1[0,0],y1[0,0]
+boo=(abs(x) <= (maxx - minx) /2+nc1.XCELL*10) & (abs(y) <= (maxy - miny) /2+nc1.YCELL*10)
+idx = np.where(boo)
+mp=len(idx[0])
+xyc= [(x[idx[0][i],idx[1][i]],y[idx[0][i],idx[1][i]]) for i in range(mp)]
+from scipy.interpolate import griddata
+c=np.array([data[idx[0][i], idx[1][i]] for i in range(mp)])
+c.shape
+mp
+c=data[idx[0][:], idx[1][:]]
+c.shape
+z = griddata(xyc, c, (x1, y1), method='linear')
+z.shape
+i,j=z.shape//2
+(i,j)=z.shape//2
+z.shape//2
+a=np.array(z.shape)
+i,j=a//2
+i,j
+z[i,j]
+nc[V[3][0]][0,0,:,:]=z
+nc.close()
+pwd
+%history -f his.txt
+fname='giam_28_classes_global.tif'
+img = rasterio.open(fname)
+nx,ny,nz=img.width,img.height,img.count
+lat_1d=[90-(180./(ny-1))*i for i in range(ny)]
+lon_1d=[-180+(360./(nx-1))*i for i in range(nx)]
+data=img.read()
+lonm, latm = np.meshgrid(lon_1d, lat_1d)
+idx=np.where(data>0)
+DD={'lon':lonm[idx[0],idx[1]],'lat':latm[idx[0],idx[1]],'irr':data[0,idx[0],idx[1]]}
+df=DataFrame(DD)
+df.set_index('lon').to_csv('irr.csv')
+len(df)
+len(data.flatten())
+len(idx)
+DD={'lon':lonm[idx[1],idx[2]],'lat':latm[idx[1],idx[2]],'irr':data[0,idx[1],idx[2]]}
+df=DataFrame(DD)
+df.set_index('lon').to_csv('irr.csv')
+boo=(df.lon>=60&df.lon<=180)&(df.lon>=-10&df.lon<=50)
+boo=(df.lon>=60&df.lon<=180)&(df.lat>=-10&df.lat<=50)
+boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+df1=df.loc[boo].reset_index(drop=True)
+len(df1)
+dx,dy=360./(nx-1),180./(ny-1)
+dx,dy
+df1['lonn']=df.lon-dx/2
+df1['lonx']=df.lon+dx/2
+df1['latx']=df.lat+dy/2
+df1['latn']=df.lat-dy/2
+x,y=pnyc(df1.lonn,df1.latn, inverse=False)
+x,y=pnyc(list(df1.lonn),list(df1.latn), inverse=False)
+xn,yn=pnyc(list(df1.lonn),list(df1.latn), inverse=False)
+xx,yn=pnyc(list(df1.lonx),list(df1.latn), inverse=False)
+xn,yx=pnyc(list(df1.lonn),list(df1.latx), inverse=False)
+xx,yx=pnyc(list(df1.lonx),list(df1.latx), inverse=False)
+his
+history
+xn[:5]
+for i in 'xy':
+    for j in 'nx':
+        exec(i+j+'=np.array('+i+j+',dtype=int)')
+xn[:5]
+xx[:5]
+for i in 'xy':
+    for j in 'nx':
+        exec(i+j+'=np.array('+i+j+'/1000,dtype=int)*1000')
+xx[:5]
+xn[:5]
+yn[:5]
+yx[:5]
+df1.head()
+df1['latn']=df1.lat-dy/2
+df1['lonn']=df1.lon-dx/2
+df1['latx']=df1.lat+dy/2
+df1['lonx']=df1.lon+dx/2
+xn,yn=pnyc(list(df1.lonn),list(df1.latn), inverse=False)
+xn,yx=pnyc(list(df1.lonn),list(df1.latx), inverse=False)
+xx,yn=pnyc(list(df1.lonx),list(df1.latn), inverse=False)
+xx,yx=pnyc(list(df1.lonx),list(df1.latx), inverse=False)
+for i in 'xy':
+    for j in 'nx':
+        exec(i+j+'=np.array('+i+j+'/1000,dtype=int)*1000')
+type(xx)
+for i in 'xy':
+    for j in 'nx':
+        exec('a=np.array('+i+j+')')
+        exec(i+j+'=np.array(a/1000,dtype=int)*1000')
+xn[:5]
+xx[:5]
+yn[:5]
+yx[:5]
+for i in 'xy':
+    for j in 'nx':
+        ij=i+j
+        exec('a=np.array('+ij+')')
+        exec('df1["'+ij+'"]=np.array(a/1000,dtype=int)*1000')
+df1.head()
+for i in 'xy':
+    for j in 'nx':
+        ij=i+j
+        exec('a=np.array('+ij+')')
+        exec('df1["'+ij+'"]=np.array(a/1000,dtype=int)')
+df1.head()
+nc.XORIG
+fname
+fname='temp.nc'
+nc = netCDF4.Dataset(fname, 'r')
+x,y=pnyc(list(df1.lon),list(df1.lat), inverse=False)
+df1['ix']=[(i-nc.XORIG)/nc.XCELL for i in x]
+x=np.array(x)
+y=np.array(y)
+df1['ix']=(x-nc.XORIG)/nc.XCELL
+df1['iy']=(y-nc.YORIG)/nc.YCELL
+df1.head()
+df1['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+df1['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+df1.head()
+min(df1.ix)
+min(df1.iy)
+boo=(df1.ix==37)&(df1.iy==458)
+df1.loc[boo]
+df1['ixy']=[str(i)+'_'+str(j) for i,j in zip(df1.ix,df1,iy)]
+df1['ixy']=[str(i)+'_'+str(j) for i,j in zip(df1.ix,df1.iy)]
+var.shape()
+nrow,ncol
+var=np.zeros(shape=(29,nrow,ncol))
+len(set(df1.ixy))
+df2=df1.loc[df1.ix>=0&df1.ix<ncol&df1.iy>=0&df1.iy<nrow].reset_index(drop=True)
+df2=df1.loc[(df1.ix>=0)&(df1.ix<ncol)&(df1.iy>=0)&(df1.iy<nrow)].reset_index(drop=True)
+len(df1),len(df2)
+for ixy in set(df1.ixy):
+  a=df2.loc[df1.ixy==ixy]  
+  ix,iy=(int(i) for i in ixy.split('_'))
+  for i in set(a.irr):
+    var[i,iy,ix]=len(a.loc[a.irr==i])
+ixy
+ncol
+nrow
+df1.head()
+df2.head()
+a.head()
+var=np.zeros(shape=(29,nrow,ncol))
+for ixy in set(df2.ixy):
+  a=df2.loc[df2.ixy==ixy]  
+  ix,iy=(int(i) for i in ixy.split('_'))
+  for i in set(a.irr):
+    var[i,iy,ix]=len(a.loc[a.irr==i])
+fname='gmlulca_10classes_global.tif'
+img = rasterio.open(fname)
+data=img.read()
+data.shape
+nx,ny,nz=img.width,img.height,img.count
+dx,dy=360./(nx-1),180./(ny-1)
+dx,dy
+for ixy in set(df2.ixy):
+  a=df2.loc[df2.ixy==ixy]  
+  ix,iy=(int(i) for i in ixy.split('_'))
+  for i in set(a.irr):
+    var[i,iy,ix]=len(a.loc[a.irr==i])
+pv=pivot_table(df2,index='ixy',values='irr',aggfunc=count).reset_index()
+pv=pivot_table(df2,index='ixy',values='irr',aggfunc='count').reset_index()
+pv.head()
+df2['ixyr']=[i+'_'+str(j) for i in zip(df2.ixy,df2.irr)]
+df2['ixyr']=[i+'_'+str(j) for i,j in zip(df2.ixy,df2.irr)]
+pv=pivot_table(df2,index='ixyr',values='irr',aggfunc='count').reset_index()
+pv.head()
+len(pv)
+var=np.zeros(shape=(29,nrow,ncol))
+for n in range(len(pv)):
+  ixy=pv.loc[n,'ixyr']  
+  ix,iy,ir=(int(i) for i in ixy.split('_')) 
+  var[ir,iy,ix]=pv.loc[n,'irr']
+ix,iy,ir
+var[:,iy,ix]
+fname
+fname='temp.nc'
+nc = netCDF4.Dataset(fname, 'r+')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+V
+v='GMIA_28'
+nc[v][0,:,:,:]=var[:,:,:]
+nc[v][0,:,:,:]=var[:,:,:]/15/15
+nc.close()
+np.max(var)
+15*15
+idx=np.where(var==554.0)
+idx
+var[:,294,0]
+nc = netCDF4.Dataset(fname, 'r+')
+svar=np.sum(var,axis=0)
+a=np.where(svar<255,svar,255)
+np.max(a)
+svar[:5,:5]
+idx=(svar==np.max(svar))
+idx
+idx=np.where(svar==np.max(svar))
+idx
+svar[292,0]
+var[:,292,0]
+a[292,0]
+a.shape
+svar[291,0]
+a[291,0]
+nc[v][0,:,:,:]=var[:,:,:]/svar[None,:,:]
+nc.close()
+%history -f his.txt
+fname='temp.nc'
+nc = netCDF4.Dataset(fname, 'r+')
+nc[v][0,:,:,:]=var[:,:,:]/a[None,:,:]
+nc['GMIA'][0,:,:,:]=var[:,:,:]/a[None,:,:]
+nc.close()
+fname='gmlulca_10classes_global.tif'
+img = rasterio.open(fname)
+data.shape
+nx,ny
+lon_1d=[-180+(360./(nx-1))*i for i in range(nx)]
+lat_1d=[90-(180./(ny-1))*i for i in range(ny)]
+lonm.shape
+nx,ny
+lonm, latm = np.meshgrid(lon_1d, lat_1d)
+idx=np.where(data>0)
+DD={'lon':lonm[idx[1],idx[2]],'lat':latm[idx[1],idx[2]],'irr':data[0,idx[1],idx[2]]}
+df=DataFrame(DD)
+df.set_index('lon').to_csv('lu.csv')
+df.head
+df.head()
+pv=pivot_table(df,index='irr',values='irr',aggfunc='count').reset_index()
+df.head()
+df['lu']=df.irr
+pv=pivot_table(df,index='lu',values='irr',aggfunc='count').reset_index()
+pv
+idx=np.where(data<9)
+DD={'lon':lonm[idx[1],idx[2]],'lat':latm[idx[1],idx[2]],'irr':data[0,idx[1],idx[2]]}
+df=DataFrame(DD)
+len(df)
+len(data.flatten())
+boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+idx=np.where(data>=0)
+DD={'lon':lonm[idx[1],idx[2]],'lat':latm[idx[1],idx[2]],'irr':data[0,idx[1],idx[2]]}
+df=DataFrame(DD)
+len(df)
+boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+df1=df.loc[boo].reset_index(drop=True)
+x,y=pnyc(list(df1.lon),list(df1.lat), inverse=False)
+x,y=np.array(x),np.array(y)
+nc.XORIG
+fname='lu.nc'
+nc = netCDF4.Dataset(fname, 'r+')
+df1['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+df1['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+df2=df1.loc[(df1.ix>=0)&(df1.ix<ncol)&(df1.iy>=0)&(df1.iy<nrow)].reset_index(drop=True)
+df2['ixy']=[str(i)+'_'+str(j) for i,j in zip(df2.ix,df2.iy)]
+df2['ixyr']=[i+'_'+str(j) for i,j in zip(df2.ixy,df2.irr)]
+pv=pivot_table(df2,index='ixyr',values='irr',aggfunc='count').reset_index()
+var=np.zeros(shape=(11,nrow,ncol))
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+nt,nlay,nrow,ncol=(nc.variables[v].shape[i] for i in range(4))
+v='GMIA'
+nt,nlay,nrow,ncol=(nc.variables[v].shape[i] for i in range(4))
+nt,nlay,nrow,ncol
+nc = netCDF4.Dataset(fname, 'r+')
+nt,nlay,nrow,ncol=(nc.variables[v].shape[i] for i in range(4))
+nt,nlay,nrow,ncol
+pv.head()
+var=np.zeros(shape=(11,nrow,ncol))
+for n in range(len(pv)):
+  ixy=pv.loc[n,'ixyr']
+  ix,iy,ir=(int(i) for i in ixy.split('_'))
+  var[ir,iy,ix]=pv.loc[n,'irr']
+np.max(var)
+idx=np.where(var==706.0)
+idx
+var[:,0,0]
+svar=np.sum(var,axis=0)
+a=np.where(svar<255,svar,255) #255=15*15
+nc[V[3]][0,:,:,:]=var[:,:,:]/a[None,:,:]
+svar=np.sum(var,axis=0)
+a=np.where(svar<255,svar,255)
+nc[V[3]][0,:,:,:]=var[:,:,:]/a[None,:,:]
+nc[v][0,:,:,:]=var[:,:,:]/a[None,:,:]
+nc.close()
+nc = netCDF4.Dataset(fname, 'r+')
+nc['GMIA'][0,:,:,:]=var[:,:,:]/svar[None,:,:]
+nc.close()
+pv.head()
+len(pv)
+var=np.zeros(shape=(11,nrow,ncol))
+pv['ix']=[int(i.split('_')[0]) for i in df.ixyr]
+pv['ix']=[int(i.split('_')[0]) for i in pv.ixyr]
+pv['iy']=[int(i.split('_')[1]) for i in pv.ixyr]
+pv['ir']=[int(i.split('_')[2]) for i in pv.ixyr]
+var[pv.ir,pv.iy,pv.ix]=pv.irr
+nc = netCDF4.Dataset(fname, 'r+')
+svar=np.sum(var,axis=0)
+nc['GMIA'][0,:,:,:]=var[:,:,:]/svar[None,:,:]
+nc.close()
+pwd
+ls
+cd ../HarvestedAreaYield175Crops_Geotiff/
+ls
+fname
+fname='temp.nc'
+nc = netCDF4.Dataset(fname, 'r+')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+V
+nlay,nt,nrow,ncol=(nc.variables[v].shape[i] for i in range(4))
+nlay,nt,nrow,ncol
+for k in range(nlay,42):
+    nc[v][k,:,:,:]=0.
+nc.NLAYS=42
+nc.close()
+fname='HarvestedAreaYield175Crops_Geotiff/rapeseed_HarvAreaYield_Geotiff/rapeseed_HarvestedAreaHectares.tif'
+fname='temp.nc'
+nc = netCDF4.Dataset(fname, 'r+')
+fname='HarvestedAreaYield175Crops_Geotiff/rapeseed_HarvAreaYield_Geotiff/rapeseed_HarvestedAreaHectares.tif'
+img = rasterio.open(fname)
+nx,ny,nz=img.width,img.height,img.count
+nx,ny,nz
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+V
+def tif2nc(tif_name,nc_name):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df=df.loc[boo].reset_index(drop=True)
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  df['ixyr']=[i+'_'+str(j) for i,j in zip(df.ixy,df.val)]
+  pv=pivot_table(df,index='ixyr',values='val',aggfunc='count').reset_index()
+  var=np.zeros(shape=(nlay,nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixyr']
+    ix,iy,ir=(int(i) for i in ixy.split('_'))
+    var[ir,iy,ix]=pv.loc[n,'val']
+  svar=np.sum(var,axis=0)
+  a=np.where(svar<255,svar,255) #255=15*15
+  nc[V[3]][0,:,:,:]=var[:,:,:]/a[None,:,:]
+  nc.close()
+  return 0
+tif_name
+tif_name='HarvestedAreaYield175Crops_Geotiff/rapeseed_HarvAreaYield_Geotiff/rapeseed_HarvestedAreaHectares.tif'
+nc_name='temp.nc'
+i=tif2nc(tif_name,nc_name)
+spec
+dd
+d21_175.json
+d21_175
+len(d21_175)
+crop21=list(d21_175)
+crop21.sort()
+tif_name
+s=set()
+for i in crop21:
+    c175=d21_175[i]
+    if type(c175)==list or c175==wheat:continue
+    s|=c175
+for i in crop21:
+    c175=d21_175[i]
+    if type(c175)==list or c175=='wheat':continue
+    s|=c175
+for i in crop21:
+    c175=d21_175[i]
+    if type(c175)==list or c175=='wheat':continue
+    s|=set(c175)
+s
+s=set()
+for i in crop21:
+    c175=d21_175[i]
+    if type(c175)==list or c175=='wheat':continue
+    s|=set([c175])
+s
+ls
+with open(fnameO,'r') as jsonfile:
+    d21_175=json.load(jsonfile)
+fnameO
+s=set()
+for i in crop21:
+    c175=d21_175[i]
+    if type(c175)==list or c175=='wheat':continue
+    s|=set([c175])
+s
+tif_name
+d175_21={j:i for i,j in zip(d21_175.keys,d21_175.values)}
+d175_21={j:i for i,j in zip(d21_175.keys(),d21_175.values())}
+d175_21={d21_175[i]:i for i in crop21}
+d175_21={d21_175[i]:i for i in crop21 if i not in ['wheat_sprint','wheat_winter']}
+i
+crop21
+len(crop21)
+d21_175
+!vi
+!vi d21_175.json
+with open(fnameO,'r') as jsonfile:
+    d21_175=json.load(jsonfile)
+crop21=list(d21_175)
+crop21.sort()
+d175_21={d21_175[i]:i for i in crop21 if i not in ['wheat_spring','wheat_winter','beansedible']}
+d175_21
+len(d175_21)
+len(s)
+set(s)-set(d175_21)
+d175_21={d21_175[i]:crop21.index(i) for i in crop21 if i not in ['wheat_spring','wheat_winter','beansedible']}
+d175_21
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df=df.loc[boo].reset_index(drop=True)
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  nc[V[3]][0,lev,:,:]=var[:,:,:]
+  nc.close()
+  return 0
+tif_name
+d175_21['rapeseed']
+i=tif2nc(tif_name,nc_name,4)
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df=df.loc[boo].reset_index(drop=True)
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  nc[V[3]][0,lev,:,:]=var[:,:]
+  nc.close()
+  return 0
+i=tif2nc(tif_name,nc_name,4)
+nc.close()
+i=tif2nc(tif_name,nc_name,4)
+V[3]
+V[3][0]
+var.shape
+var=var[0,:,:]
+var.shape
+lev=4
+nc[V[3]][0,lev,:,:]=var[:,:]
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df=df.loc[boo].reset_index(drop=True)
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  nc[V[3][0]][0,lev,:,:]=var[:,:]
+  nc.close()
+  return 0
+i=tif2nc(tif_name,nc_name,4)
+i
+tif_name
+c175[:5]
+c175
+s
+for c in s:
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,d175_21[c])
+  print(c,i)
+set(crop21)-s
+fnameO
+crop21.index('beansedible')
+fname
+fname='temp.nc'
+nc = netCDF4.Dataset(fname, 'r+')
+nc[V[3][0]][0,3,:,:]=0
+nc.close()
+crop21[4]
+tif_name
+d175_21['mixedgrass']
+s
+c='alfalfa'
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+tif_name
+ls -lh HarvestedAreaYield175Crops_Geotiff/alfalfa_HarvAreaYield_Geotiff
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df1=df.loc[boo].reset_index(drop=True)
+  df=df1
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df1=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df=df1
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  if lev<nlay:
+    nc[V[3]][0,lev,:,:]=var[:,:]
+  else:    
+    nc[V[3]][0,lev,:,:]+=var[:,:]
+  nc.close()
+  return 0
+c
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,d175_21[c])
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df1=df.loc[boo].reset_index(drop=True)
+  df=df1
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df1=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df=df1
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  if lev<nlay:
+    nc[V[3][0]][0,lev,:,:]=var[:,:]
+  else:    
+    nc[V[3][0]][0,lev,:,:]+=var[:,:]
+  nc.close()
+  return 0
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,d175_21[c])
+d175_21[c]
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df1=df.loc[boo].reset_index(drop=True)
+  df=df1
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df1=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df=df1
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  if lev<nlay:      
+    nc[V[3][0]][0,lev,:,:]=var[:,:]
+  else:    
+    nc[V[3][0]][0,lev,:,:]+=var[:,:]
+  nc.close()
+  return 0
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,d175_21[c])
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*(i+5) for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df1=df.loc[boo].reset_index(drop=True)
+  df=df1
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df1=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df=df1
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  if lev<nlay:
+    nc[V[3][0]][0,lev,:,:]=var[:,:]
+  else:    
+    nc[V[3][0]][0,lev,:,:]+=var[:,:]
+  nc.close()
+  return 0
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,d175_21[c])
+fname
+nc = netCDF4.Dataset(fname, 'r+')
+nc[V[3][0]][0,0,:,:]=0
+nc.close()
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,d175_21[c])
+nc.XORIG
+nc = netCDF4.Dataset(fname, 'r+')
+nc.XORIG
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df1=df.loc[boo].reset_index(drop=True)
+  df=df1
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)-5
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df1=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df=df1
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  if lev<nlay:
+    nc[V[3][0]][0,lev,:,:]=var[:,:]
+  else:    
+    nc[V[3][0]][0,lev,:,:]+=var[:,:]
+  nc.close()
+  return 0
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,d175_21[c])
+pv.head()
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df1=df.loc[boo].reset_index(drop=True)
+  df=df1
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)-5
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df1=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df=df1
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  if lev<nlay:
+    nc[V[3][0]][0,lev,:,:]=var[:,:]
+  else:    
+    nc[V[3][0]][0,lev,:,:]+=var[:,:]
+  nc.close()
+  return pv
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,d175_21[c])
+i.head()
+i.tail()
+tif_name
+(120.9900+121.73)/2
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df1=df.loc[boo].reset_index(drop=True)
+  df=df1
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df1=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df=df1
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  if lev<nlay:
+    nc[V[3][0]][0,lev,:,:]=var[:,:]
+  else:    
+    nc[V[3][0]][0,lev,:,:]+=var[:,:]
+  nc.close()
+  return 0
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,d175_21[c])
+crop21[4]
+crop21
+c='beansedible'
+d21_175[c]
+nc = netCDF4.Dataset(fname, 'r+')
+nc[V[3][0]][0,3,:,:]=0
+crop21.index(c)
+for c in ['broadbean', 'greenbean', 'greenbroadbean', 'stringbean']:
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,3)
+c='wheat_spring'
+crop21.index(c)
+c='wheat_winter'
+crop21.index(c)
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df1=df.loc[boo].reset_index(drop=True)
+  df=df1
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df1=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df=df1
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  if lev==3: #beansedible
+    nc[V[3][0]][0,lev,:,:]+=var[:,:]
+  else
+    nc[V[3][0]][0,lev,:,:]=0.
+    if lev==19: #wheat_spring
+      nc[V[3][0]][0,lev,310:,:]=var[310:,:]
+    elif lev==20: #wheat_winter
+      nc[V[3][0]][0,lev,:310,:]=var[:310,:]
+    else:
+      nc[V[3][0]][0,lev,:,:]+=var[:,:]
+  nc.close()
+  return 0
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df1=df.loc[boo].reset_index(drop=True)
+  df=df1
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df1=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df=df1
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  if lev==3: #beansedible
+    nc[V[3][0]][0,lev,:,:]+=var[:,:]
+  else:
+    nc[V[3][0]][0,lev,:,:]=0.
+    if lev==19: #wheat_spring
+      nc[V[3][0]][0,lev,310:,:]=var[310:,:]
+    elif lev==20: #wheat_winter
+      nc[V[3][0]][0,lev,:310,:]=var[:310,:]
+    else:
+      nc[V[3][0]][0,lev,:,:]+=var[:,:]
+  nc.close()
+  return 0
+c='wheat'
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,19)
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,20)
+def tif2nc(tif_name,nc_name,lev):
+  import numpy as np
+  import netCDF4
+  from pyproj import Proj
+  import rasterio
+  import numpy as np
+
+  img = rasterio.open(tif_name)
+  nx,ny,nz=img.width,img.height,img.count
+  if nz!=1:return -1
+  dx,dy=360./(nx-1),180./(ny-1)
+  lon_1d=[-180+dx*i for i in range(nx)]
+  lat_1d=[90-dy*i for i in range(ny)]
+  data=img.read()
+  lonm, latm = np.meshgrid(lon_1d, lat_1d)
+  DD={'lon':lonm.flatten(),'lat':latm.flatten(),'val':data.flatten()}
+  df=DataFrame(DD)
+  boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+  df1=df.loc[boo].reset_index(drop=True)
+  df=df1
+
+  Latitude_Pole, Longitude_Pole = 23.61000, 120.9900
+  pnyc = Proj(proj='lcc', datum='NAD83', lat_1=10, lat_2=40,lat_0=Latitude_Pole, lon_0=Longitude_Pole, x_0=0, y_0=0.0)
+  nc = netCDF4.Dataset(nc_name, 'r+')
+  V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+  nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+
+  #d00範圍：北緯-10~50、東經60~180。'area': [50, 60, -10, 180,],
+  x,y=pnyc(list(df.lon),list(df.lat), inverse=False)
+  x,y=np.array(x),np.array(y)
+  df['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+  df['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+  df1=df.loc[(df.ix>=0)&(df.ix<ncol)&(df.iy>=0)&(df.iy<nrow)].reset_index(drop=True)
+  df=df1
+  df['ixy']=[str(i)+'_'+str(j) for i,j in zip(df.ix,df.iy)]
+  pv=pivot_table(df,index='ixy',values='val',aggfunc=np.sum).reset_index()
+  var=np.zeros(shape=(nrow,ncol))
+  for n in range(len(pv)):
+    ixy=pv.loc[n,'ixy']
+    ix,iy=(int(i) for i in ixy.split('_'))
+    var[iy,ix]=pv.loc[n,'val']
+  if lev==3: #beansedible
+    nc[V[3][0]][0,lev,:,:]+=var[:,:]
+  else:
+    nc[V[3][0]][0,lev,:,:]=0.
+    if lev==19: #wheat_spring
+      nc[V[3][0]][0,lev,320:,:]=var[320:,:]
+    elif lev==20: #wheat_winter
+      nc[V[3][0]][0,lev,:320,:]=var[:320,:]
+    else:
+      nc[V[3][0]][0,lev,:,:]+=var[:,:]
+  nc.close()
+  return 0
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,19)
+  tif_name='HarvestedAreaYield175Crops_Geotiff/'+c+'_HarvAreaYield_Geotiff/'+c+'_HarvestedAreaHectares.tif'
+  i=tif2nc(tif_name,nc_name,20)
+lst ../InternationlWaterManagementInstitute/
+!lst ../InternationlWaterManagementInstitute/
+fname='../InternationlWaterManagementInstitute/irr28.nc'
+nc = netCDF4.Dataset(fname, 'r')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+V
+irr=np.sum(nc[V[3][0]][0,:,:,:],axis=0)
+np.max(irr)
+V[3][0]
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+nt,nlay,nrow,ncol
+irr=np.sum(nc[V[3][0]][0,1:,:,:],axis=0)
+np.max(irr)
+cd ../InternationlWaterManagementInstitute/
+fname='giam_28_classes_global.tif'
+img = rasterio.open(fname)
+nx,ny,nz=img.width,img.height,img.count
+dx,dy=360./(nx-1),180./(ny-1)
+lon_1d=[-180+dx*i for i in range(nx)]
+lat_1d=[90-dy*i for i in range(ny)]
+data=img.read()
+lonm, latm = np.meshgrid(lon_1d, lat_1d)
+idx=np.where(data>0)
+DD={'lon':lonm[idx[1],idx[2]],'lat':latm[idx[1],idx[2]],'irr':data[0,idx[1],idx[2]]}
+df=DataFrame(DD)
+fname
+fname='irr28.nc'
+nc = netCDF4.Dataset(fname, 'r+')
+ls *nc
+nc.close()
+nc = netCDF4.Dataset(fname, 'r+')
+nlay
+boo=(df.lon>=60)&(df.lon<=180)&(df.lat>=-10)&(df.lat<=50)
+df1=df.loc[boo].reset_index(drop=True)
+x,y=pnyc(list(df1.lon),list(df1.lat), inverse=False)
+x,y=np.array(x),np.array(y)
+df1['ix']=np.array((x-nc.XORIG)/nc.XCELL,dtype=int)
+df1['iy']=np.array((y-nc.YORIG)/nc.YCELL,dtype=int)
+df2=df1.loc[(df1.ix>=0)&(df1.ix<ncol)&(df1.iy>=0)&(df1.iy<nrow)].reset_index(drop=True)
+df2['ixy']=[str(i)+'_'+str(j) for i,j in zip(df2.ix,df2.iy)]
+df2['ixyr']=[i+'_'+str(j) for i,j in zip(df2.ixy,df2.irr)]
+pv=pivot_table(df2,index='ixyr',values='irr',aggfunc='count').reset_index()
+var=np.zeros(shape=(nlay,nrow,ncol))
+nc[V[3][0]][0,:,:,:]=var[:,:,:]
+for n in range(len(pv)):
+  ixy=pv.loc[n,'ixyr']
+  ix,iy,ir=(int(i) for i in ixy.split('_'))
+  var[ir,iy,ix]=pv.loc[n,'irr']
+svar=np.sum(var,axis=0)
+a=np.where(svar<255,svar,255)
+np.min(a)
+a=np.where(svar<255,255,svar)
+np.min(a)
+np.max(a)
+nc[V[3]][0,:,:,:]=var[:,:,:]/a[None,:,:]
+nc[V[3][0]][0,:,:,:]=var[:,:,:]/a[None,:,:]
+np.max(nc[V[3][0]][0,0,:,:])
+np.min(nc[V[3][0]][0,0,:,:])
+nc[V[3][0]][0,0,:,:]=a[:,:]
+nc.close()
+nc = netCDF4.Dataset(fname, 'r')
+irr=np.sum(nc[V[3][0]][0,1:,:,:],axis=0)
+np.max(irr)
+np.min(irr)
+cd ../HarvestedAreaYield175Crops_Geotiff/
+fname='temp.nc'
+nc = netCDF4.Dataset(fname, 'r+')
+V=[list(filter(lambda x:nc.variables[x].ndim==j, [i for i in nc.variables])) for j in [1,2,3,4]]
+nt,nlay,nrow,ncol=(nc.variables[V[3][0]].shape[i] for i in range(4))
+tif_name
+km2=nc[V[3][0]][0,:21,:,:]*0.01
+for lev in range(21,42):
+    nc[V[3][0]][0,lev,:,:]=irr[:,:]*km2[lev-21,:,:]
+for lev in range(21):
+    nc[V[3][0]][0,lev,:,:]=(1-irr[:,:])*km2[lev,:,:]
+svar=np.sum(nc[V[3][0]][0,:,:,:],axis=0)
+a=np.where(svar<255,svar,255)
+np.max(svar)
+np.min(svar)
+a=np.where(svar<255,255,svar)
+nc[V[3][0]][0,:,:,:]=nc[V[3][0]][0,:,:,:]/a[None,:,:]
+nc.close()
+%history -f his.txt
+pwd
+fname
+nc.close()
+nc = netCDF4.Dataset(fname, 'r+')
+svar=np.sum(nc[V[3][0]][0,22,:,:],axis=0)
+np.max(svar)
+svar=np.sum(nc[V[3][0]][0,40,:,:],axis=0)
+np.max(svar)
+svar=np.sum(nc[V[3][0]][0,41,:,:],axis=0)
+np.max(svar)
+nc.NLAYS
+nc.close()
+pwd
+%history -f his.txt
