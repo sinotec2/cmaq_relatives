@@ -35,14 +35,14 @@ for p in pth[ipth:ipth+1]:
     sdatetime=[jul2dt(nc0.variables['TFLAG'][t,0,:]) for t in range(nt)]
     jul2=[dt2jul(i+datetime.timedelta(hours=-8)) for i in sdatetime]
     for t in range(nt):
-      nc.variables['TFLAG'][t,:,0]=[jul2[t][0] for i in range(nv)]
-      nc.variables['TFLAG'][t,:,1]=[jul2[t][1] for i in range(nv)]
-      for iv in range(nv):
-        v=V[3][iv]
-        if v in V0[3]:
-          nc.variables[v][t,:,:,:]=nc0.variables[v][t,:,:,:]/3600.
-        else:
-          nc.variables[v][t,:,:,:]=0
+      for it in range(2):
+        nc.variables['TFLAG'][t,:,it]=jul2[t][it]
+    for iv in range(nv):
+      v=V[3][iv]
+      if v in V0[3]:
+        nc[v][:]=nc0[v][:]/3600.
+      else:
+        nc[v][:]=0
     nc.SDATE, nc.STIME=(jul2[0][0],jul2[0][1])
     nc.close()
     print(fnameO)
